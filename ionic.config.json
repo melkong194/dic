@@ -1,0 +1,7 @@
+{
+  "name": "dic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
