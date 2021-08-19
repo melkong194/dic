@@ -1,0 +1,193 @@
+/* ======== BODY CONTENT ========= */
+
+ion-content, #icontent{
+    height: calc(100% - 47px);   
+    top: 0;
+}
+
+#contentBody{
+    height: 100%;
+}
+
+#contentWrapper{
+    padding: 5px 8px;
+    background-color: #fbfbfb;
+}
+
+/* ======== HEADER ========= */
+.iTitle{
+    text-align: center;
+    font-family: "Arial","Papyrus","Lucida Handwriting","Brush Script MT" ;
+    font-size: 17px;
+    font-weight: 600;
+    padding-top: 10px;
+    padding-bottom: 7px;
+    text-decoration: none;
+    letter-spacing: 0.4px;
+}
+.headerWrapper{
+    border-bottom: 1px solid #eee ;
+    opacity: 1;
+    display: block;
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0 0 3px;
+}
+
+/* ======== FOOTER TABS ========= */
+#ifooter{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 47px;
+}
+
+ion-tabs ion-tab-bar{
+    border: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px; 
+    background-color: #180f34;
+}
+
+ion-tabs ion-icon {
+    font-size: 1.6rem;
+}
+
+ion-tabs ion-tab-button{
+    background-color: #180f34;
+}
+
+ion-tabs .tab-selected{
+    color: rgb(240, 245, 215);
+    background-color: #211545;
+}
+
+/* ======== TAB 1: GRID LETTERS ========= */
+.tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* .tab-container::after {
+    content: "";
+    flex: auto;
+  } */
+  
+.tab-container > .dletter {
+    background-color: #B9D980;
+    margin: 5px;
+    width: 50px;
+    height: 55px;
+    border-radius: 5px;
+    border: 2px solid darkgreen;
+    padding: 15px 0;
+
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #086500;
+    background-image: linear-gradient(-180deg, rgb(200, 250, 92) 1%, #B9D980 100%);
+    box-shadow: 0 2px 2px 0 #c9d2c9, 
+                0 -1px 2px rgb(140 206 146) inset, 
+                0 1px 2px rgb(15 86 1 / 40%) inset, 
+                0 1px 3px 0 rgb(195 208 198) inset;
+}
+
+/* ======== TAB 2: WORDS ========= */
+.searchWrapper{
+    background-color: #fbfbfb;
+    padding: 5px 15px;
+}
+
+.tab-container > .dword{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    width: 170px;
+    height: 100px;
+    padding-top: 10px;
+    margin: 0px 0px 10px 0px;
+    border-bottom: 1px solid #fefefe;
+    box-shadow: 0 0 3px;
+}
+
+.dword > img{
+    height: 80px;
+    cursor: pointer;
+}
+
+.dword > span{
+    margin-top: 35px;
+    margin-bottom: 25px;
+    width: 90px;
+    cursor: pointer;
+    font-family: arial;
+    font-weight: 550;
+    font-size: 12px;
+    text-align: center;
+}
+#empty{
+    /* opacity: 1; */
+    visibility: hidden;
+}
+
+/* ======== TRANSLATE ========= */
+/* LANG */
+.langWrapper, .iconLang{
+    width: 100%;
+    display: flex;
+    text-align: center;
+    font-size: 20px;
+    color: #180f34;
+    justify-content: center;
+    padding: 10px;
+}
+.langWrapper ion-icon{
+    margin-top: -5px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 30px;
+    width: 50px;
+    border-radius: 5px;
+    background-color: #180f34;
+    color: #eee;
+}
+.langWrapper button{
+    background-color: transparent;
+}
+/* TEXTAREA */
+.langArea {
+    margin: 0 auto;
+    border: 1px solid #eee;
+    width: 90%;
+}
+
+ion-searchbar{
+    padding: 0;
+    margin: 0;
+}
+/* ======== RESPONSIVE ========= */
+@media only screen and (min-width: 600px) and (min-height: 550px) {
+    /* #banner > img{
+        height: 20%;
+    } */
+
+    #contentWrapper{
+        padding: 0px 90px;
+    }
+
+    #ifooter{
+        height: 65px;
+    }
+
+    ion-content, #icontent{
+        height: calc(100% - 65px);   
+        top: 0;
+        background-color: #eee;
+    }
+    
+}
+
+
