@@ -145,7 +145,10 @@ ion-tabs .tab-selected{
                 0 1px 1px 0 #b2b3d4 inset;
     
 }
-
+/* .dletter > .deleteSpan{
+    top: 0;
+    right: 0;
+} */
 /* ======== TAB 1: GRID  ========= */
 /* .tab-container {
     display: flex;

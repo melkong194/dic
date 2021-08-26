@@ -23,11 +23,11 @@
 						@dragover.prevent
 					>
 						<div
-							v-for="item in getList(1)"
+							v-for="item in this.items"
 							:key="item.id"
 							class="dletter"
 							draggable="true"
-							@dragstart="startDrag($event, item)"
+							@dragstart="startDrag($event, item.id)"
 							@click="playSound('sound' + item.id)"
 						>
 							{{ item.name }}
@@ -45,16 +45,17 @@
 				<div class="main-footer">
 					<div
 						class="drop-area"
+                        id="drop-box"
 						@drop="onDrop($event, 2)"
 						@dragenter.prevent
 						@dragover.prevent
 					>
 						<div
-							v-for="(item, index) in getList(2)"
+							v-for="(item, index) in this.dropList"
 							:key="item.id"
 							class="dletter"
 							draggable="true"
-							@dragstart="startDrag($event, item)"
+							@dragstart="startDrag($event, item.id)"
 							@click="playSound('drop' + index)"
 						>
 							{{ item.name }}
@@ -62,6 +63,7 @@
 								:ref="'drop' + index"
 								v-bind:src="item.sound"
 							></audio>
+                            <!-- <span class="deleteSpan">x</span> -->
 						</div>
 					</div>
 					<div class="wrapperButton">
@@ -79,11 +81,6 @@
 import {
 	IonContent,
 	IonPage,
-	// IonTabs,
-	// IonTabBar,
-	// IonTabButton,
-	// IonLabel,
-	// IonRouterOutlet,
 	IonIcon,
 } from "@ionic/vue";
 import { play } from "ionicons/icons";
@@ -94,51 +91,91 @@ export default defineComponent({
 	components: {
 		IonContent,
 		IonPage,
-		// IonTabs,
-		// IonTabBar,
-		// IonTabButton,
-		// IonLabel,
-		// IonRouterOutlet,
 		IonIcon,
 	},
 
 	setup() {
 		const items = ref([
-			{ id: 0, name: "item 0", list: 1, sound: "/assets/sylls/a.wav" },
-			{ id: 1, name: "item 1", list: 2, sound: "/assets/sylls/ba.wav" },
-			{ id: 2, name: "item 2", list: 1, sound: "/assets/sylls/bad.wav" },
-			{ id: 3, name: "item 3", list: 1, sound: "/assets/sylls/badj.wav" },
-			{ id: 4, name: "item 4", list: 2, sound: "/assets/sylls/bah.wav" },
-			{ id: 5, name: "item 5", list: 1, sound: "/assets/sylls/bak.wav" },
-			{ id: 6, name: "item 6", list: 1, sound: "/assets/sylls/bal.wav" },
-			{ id: 7, name: "item 7", list: 2, sound: "/assets/sylls/balh.wav" },
-			{ id: 8, name: "item 8", list: 1, sound: "/assets/sylls/bang.wav" },
+			{ id: 0, name: "item 0", sound: "/assets/sylls/a.wav" },
+			{ id: 1, name: "item 1", sound: "/assets/sylls/ba.wav" },
+			{ id: 2, name: "item 2", sound: "/assets/sylls/bad.wav" },
+			{ id: 3, name: "item 3", sound: "/assets/sylls/badj.wav" },
+			{ id: 4, name: "item 4", sound: "/assets/sylls/bah.wav" },
+			{ id: 5, name: "item 5", sound: "/assets/sylls/bak.wav" },
+			{ id: 6, name: "item 6", sound: "/assets/sylls/bal.wav" },
+			{ id: 7, name: "item 7", sound: "/assets/sylls/balh.wav" },
+			{ id: 8, name: "item 8", sound: "/assets/sylls/bang.wav" },
 		]);
 
-		const getList = (list) => {
-			return items.value.filter((item) => item.list === list);
-		};
+        const dropList = ref([
+			{ id: 9, name: "item 9", sound: "/assets/sylls/bang.wav" },
+		]);
 
-		const startDrag = (event, item) => {
-			// console.log(item);
-			// console.log(event);
+
+        // let sortable = document.querySelectorAll('#drop-box > li')
+
+        // sortable.forEach(item => {
+        // $(item).prop('draggable', true)
+        // item.addEventListener('dragstart', dragStart)
+        // item.addEventListener('drop', dropped)
+        // item.addEventListener('dragenter', cancelDefault)
+        // item.addEventListener('dragover', cancelDefault)
+        // })
+
+        // function dragStart (e) {
+        // var index = $(e.target).index()
+        // e.dataTransfer.setData('text/plain', index)
+        // }
+
+        // function dropped (e) {
+        // cancelDefault(e)
+        
+        // let oldIndex = e.dataTransfer.getData('text/plain')
+        // let target = $(e.target)
+        // let newIndex = target.index()
+        
+        // let dropped = $(this).parent().children().eq(oldIndex).remove()
+
+        // if (newIndex < oldIndex) {
+        //     target.before(dropped)
+        // } else {
+        //     target.after(dropped)
+        // }
+        // }
+
+        // function cancelDefault (e) {
+        // e.preventDefault()
+        // e.stopPropagation()
+        // return false
+        // }
+
+
+		const startDrag = (event, id) => {
 			event.dataTransfer.dropEffect = "move";
 			event.dataTransfer.effectAllowed = "move";
-			event.dataTransfer.setData("itemId", item.id);
+			event.dataTransfer.setData("itemId", id);
 		};
 
-		const onDrop = (event, list) => {
+		const onDrop = (event, option) => {
 			const itemID = event.dataTransfer.getData("itemId");
-			const item = items.value.find((item) => item.id == itemID);
-			item.list = list;
+            if (option == 2){
+                const item = items.value.find((item) => item.id == itemID);
+                items.value.splice(items.value.indexOf(item),1);
+                dropList.value.push(item);
+            }else{
+                const item = dropList.value.find((item) => item.id == itemID);
+                dropList.value.splice(items.value.indexOf(item),1);
+                items.value.push(item);
+            }
+			
 		};
 
 		return {
-			getList,
 			startDrag,
 			onDrop,
 			play,
 			items,
+            dropList
 		};
 	},
 	methods: {
