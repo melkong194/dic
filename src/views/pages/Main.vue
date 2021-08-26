@@ -22,21 +22,21 @@
 						@dragenter.prevent
 						@dragover.prevent
 					>
-						<!-- <div class="item" @dragstart="startDrag($event, item)" draggable="true" @dragstart="startDrag($event, item)">item 1</div> -->
-                       
 						<div
 							v-for="item in getList(1)"
 							:key="item.id"
 							class="dletter"
 							draggable="true"
 							@dragstart="startDrag($event, item)"
-                           
+							@click="playSound('sound' + item.id)"
 						>
 							{{ item.name }}
-                            <!-- <audio ref="audioElm" v-bind:src="item.sound"></audio> -->
+							<audio
+								v-bind:ref="'sound' + item.id"
+								v-bind:src="item.sound"
+							></audio>
 						</div>
 					</div>
-				
 
 					<!-- END CONTENT -->
 				</div>
@@ -50,19 +50,24 @@
 						@dragover.prevent
 					>
 						<div
-							v-for="item in getList(2)"
+							v-for="(item, index) in getList(2)"
 							:key="item.id"
 							class="dletter"
 							draggable="true"
 							@dragstart="startDrag($event, item)"
-                            
+							@click="playSound('drop' + index)"
 						>
 							{{ item.name }}
-                            <!-- <audio ref="audioElm" v-bind:src="item.sound"></audio> -->
+							<audio
+								:ref="'drop' + index"
+								v-bind:src="item.sound"
+							></audio>
 						</div>
 					</div>
 					<div class="wrapperButton">
-						<a class="aButton"><ion-icon id="iIcon" :icon="play"></ion-icon></a>
+						<a class="aButton"
+							><ion-icon id="iIcon" :icon="play"></ion-icon
+						></a>
 					</div>
 				</div>
 			</ion-content>
@@ -99,15 +104,15 @@ export default defineComponent({
 
 	setup() {
 		const items = ref([
-			{ id: 0, name: "item a", list: 1 , sound:"/assets/sylls/a.wav"},
-			{ id: 1, name: "item b", list: 2 , sound:"/assets/sylls/ba.wav"},
-			{ id: 2, name: "item c", list: 1 , sound:"/assets/sylls/bad.wav"},
-            { id: 3, name: "item a", list: 1 , sound:"/assets/sylls/a.wav"},
-			{ id: 4, name: "item b", list: 2 , sound:"/assets/sylls/ba.wav"},
-			{ id: 5, name: "item c", list: 1 , sound:"/assets/sylls/bad.wav"},
-            { id: 6, name: "item a", list: 1 , sound:"/assets/sylls/ba.wav"},
-			{ id: 7, name: "item b", list: 2 , sound:"/assets/sylls/a.wav"},
-			{ id: 8, name: "item c", list: 1 , sound:"/assets/sylls/bad.wav"},
+			{ id: 0, name: "item 0", list: 1, sound: "/assets/sylls/a.wav" },
+			{ id: 1, name: "item 1", list: 2, sound: "/assets/sylls/ba.wav" },
+			{ id: 2, name: "item 2", list: 1, sound: "/assets/sylls/bad.wav" },
+			{ id: 3, name: "item 3", list: 1, sound: "/assets/sylls/badj.wav" },
+			{ id: 4, name: "item 4", list: 2, sound: "/assets/sylls/bah.wav" },
+			{ id: 5, name: "item 5", list: 1, sound: "/assets/sylls/bak.wav" },
+			{ id: 6, name: "item 6", list: 1, sound: "/assets/sylls/bal.wav" },
+			{ id: 7, name: "item 7", list: 2, sound: "/assets/sylls/balh.wav" },
+			{ id: 8, name: "item 8", list: 1, sound: "/assets/sylls/bang.wav" },
 		]);
 
 		const getList = (list) => {
@@ -132,15 +137,15 @@ export default defineComponent({
 			getList,
 			startDrag,
 			onDrop,
-            play,
-            
+			play,
+			items,
 		};
 	},
-    methods: {
-    // playSound: function(event) {
-    //   this.$refs.audioElm.play();
-    // }
-  }
+	methods: {
+		playSound: function (index) {
+			this.$refs[index].play();
+		},
+	},
 });
 </script>
 
