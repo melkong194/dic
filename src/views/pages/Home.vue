@@ -24,119 +24,12 @@
 
 					<div class="tab-container">
 						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
+							<span>a</span>
 						</div>
 						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
+							<span>:a</span>
 						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-						<div class="dletter"  id="empty">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter"  id="empty">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter"  id="empty">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter"  id="empty">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
-                        <div class="dletter"  id="empty">
-							<img height="30" src="/assets/img/letters/3.png" />
-						</div>
-						<div class="dletter"  id="empty">
-							<img height="30" src="/assets/img/letters/4.png" />
-						</div>
-						<div class="dletter"  id="empty">
-							<img height="30" src="/assets/img/letters/1.png" />
-						</div>
-						<div class="dletter" id="empty">
-							<img height="30" src="/assets/img/letters/2.png" />
-						</div>
+						
 					</div>
 					<p>
 						Lorem ipsum dolor sit amet, consectetur adipisicing

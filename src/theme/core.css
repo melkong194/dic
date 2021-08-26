@@ -11,7 +11,7 @@ ion-content, #icontent{
 
 #contentWrapper{
     padding: 5px 8px;
-    background-color: #fbfbfb;
+    background-color: #fff;
 }
 
 /* ======== HEADER ========= */
@@ -63,40 +63,117 @@ ion-tabs .tab-selected{
     color: rgb(240, 245, 215);
     background-color: #211545;
 }
-
-/* ======== TAB 1: GRID LETTERS ========= */
+/* ======== SINGLE MAIN ========= */
 .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    min-height: calc(100vh * 0.8) ;
+    background-color: #fbfbfb;
+    height: calc(100% - 70px);
+}
+.main-footer{
+    width: 100%;
+    display: flex;
+    max-height: 70px;
+    min-height: 70px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgb(9, 3, 31);
+}
+.wrapperButton{
+    width: 20%;
+}
+.wrapperButton > .aButton{
+    display: block;
+    margin: 0 auto;
+    height: 70px;
+    width: 70px;
+    text-align: center;
+    background-color: rgb(35, 136, 194);
+    font-size: 50px;
+    color: white;
+    border: 5px solid rgb(10, 39, 94); 
+    border-radius: 50%;   
+}
+.wrapperButton > .aButton:hover{
+    background-color: rgb(7, 76, 116);
+}
+#iIcon{
+    padding-top: 5px;
+}
+.drop-area{
+    display: flex;
+    width: 100%;
+    border: 5px dashed rgb(23, 90, 129);
+    height: 70px;
+}
+
+.tab-container > .dletter {
+    background-color: #B9D980;
+    margin: 3px;
+    width: 120px;
+    height: 55px;
+    padding: 15px 0;
+    text-align: center;
+    font-weight: 600px;
+    font-size: 35px;
+    cursor: pointer;
+    border: 1px solid #eee;
+    background-image: linear-gradient(-180deg, rgb(224, 222, 247) 1%, #ffffff 100%);
+    box-shadow: 0 0px 0px 0 #fafafa, 
+                0 -1px 2px #9493b3 inset, 
+                0 1px 1px #948eca inset, 
+                0 1px 1px 0 #b2b3d4 inset;
+}
+.drop-area > .dletter{
+    width: fit-content;
+    color: white;
+    margin: 7px 3px;
+    padding: 15px 5px;
+    font-size: 18px;
+    text-align: center;
+    flex-wrap: wrap;
+    border-radius: 3px;
+    border: 1px solid rgb(9, 3, 31);
+    background-image: linear-gradient(-180deg, rgb(14, 1, 58) 1%, #120744 100%);
+    box-shadow: 0 0px 0px 0 #fafafa, 
+                0 -1px 2px #2721e0 inset, 
+                0 1px 1px #4330f0 inset, 
+                0 1px 1px 0 #b2b3d4 inset;
+    
+}
+
+/* ======== TAB 1: GRID  ========= */
+/* .tab-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
 }
-
-/* .tab-container::after {
-    content: "";
-    flex: auto;
-  } */
   
 .tab-container > .dletter {
     background-color: #B9D980;
     margin: 5px;
-    width: 50px;
+    width: 120px;
     height: 55px;
-    border-radius: 5px;
-    border: 2px solid darkgreen;
     padding: 15px 0;
+    text-align: center;
+    font-weight: 600px;
+    font-size: 35px;
 
     cursor: pointer;
-    border-radius: 5px;
-    border: 1px solid #086500;
-    background-image: linear-gradient(-180deg, rgb(200, 250, 92) 1%, #B9D980 100%);
-    box-shadow: 0 2px 2px 0 #c9d2c9, 
-                0 -1px 2px rgb(140 206 146) inset, 
-                0 1px 2px rgb(15 86 1 / 40%) inset, 
-                0 1px 3px 0 rgb(195 208 198) inset;
-}
+    border: 1px solid #eee;
+    background-image: linear-gradient(-180deg, rgb(224, 222, 247) 1%, #ffffff 100%);
+    box-shadow: 0 0px 0px 0 #fafafa, 
+                0 -1px 2px #9493b3 inset, 
+                0 1px 1px #948eca inset, 
+                0 1px 1px 0 #b2b3d4 inset;
+} */
 
 /* ======== TAB 2: WORDS ========= */
-.searchWrapper{
+/* .searchWrapper{
     background-color: #fbfbfb;
     padding: 5px 15px;
 }
@@ -129,9 +206,8 @@ ion-tabs .tab-selected{
     text-align: center;
 }
 #empty{
-    /* opacity: 1; */
     visibility: hidden;
-}
+} */
 
 /* ======== TRANSLATE ========= */
 /* LANG */
@@ -187,7 +263,15 @@ ion-searchbar{
         top: 0;
         background-color: #eee;
     }
-    
+
+    .wrapperButton{
+        width: 10%;
+    }
+
+    .drop-area > .dletter{
+
+        font-size: 22px;
+    }
 }
 
 

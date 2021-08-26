@@ -5,7 +5,17 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 const routes = [
   {
     path: '/',
-    redirect: '/letters'
+    redirect: '/main'
+  },
+  {
+    path: '/main',
+    name: 'Main',
+    component: () => import('../views/pages/Main.vue')
+  },
+  {
+    path: '/abc',
+    name: 'ABC',
+    component: () => import('../views/pages/ABC.vue')
   },
   {
     path: '/letters',
