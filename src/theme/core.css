@@ -68,9 +68,9 @@ ion-tabs .tab-selected{
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    min-height: calc(100vh * 0.8) ;
+    min-height: calc(100vh * 0.65) ;
     background-color: #fbfbfb;
-    height: calc(100% - 70px);
+    /* height: calc(100% - 70px); */
 }
 .main-footer{
     width: 100%;
@@ -86,7 +86,7 @@ ion-tabs .tab-selected{
 .wrapperButton{
     width: 20%;
 }
-.wrapperButton > .aButton{
+.wrapperButton > .stringButton{
     display: block;
     margin: 0 auto;
     height: 70px;
@@ -98,7 +98,7 @@ ion-tabs .tab-selected{
     border: 5px solid rgb(10, 39, 94); 
     border-radius: 50%;   
 }
-.wrapperButton > .aButton:hover{
+.wrapperButton > .stringButton:hover{
     background-color: rgb(7, 76, 116);
 }
 #iIcon{
@@ -128,6 +128,9 @@ ion-tabs .tab-selected{
                 0 1px 1px #948eca inset, 
                 0 1px 1px 0 #b2b3d4 inset;
 }
+.tab-container > .dletter:hover {
+    border: 1px solid rgb(10, 5, 85);
+}
 .drop-area > .dletter{
     width: fit-content;
     color: white;
@@ -145,10 +148,130 @@ ion-tabs .tab-selected{
                 0 1px 1px 0 #b2b3d4 inset;
     
 }
-/* .dletter > .deleteSpan{
-    top: 0;
-    right: 0;
+.drop-area > .dletter:hover{
+    border: 1px solid rgb(24, 119, 209);   
+}
+.searchedWord{
+    width: 100%;
+    color: rgb(10, 39, 94);
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    padding: 20px;
+}
+.searchedWord > .repeatButton{
+    margin: 0 20px;
+    height: 30px;
+    width: 40px;
+    text-align: center;
+    border: 1px solid rgb(10, 39, 94); 
+    background-color: rgb(7, 76, 116);
+    color: #fff;
+}
+.searchedWord > .repeatButton:hover{
+    background-color: rgb(95, 162, 201);
+    color: rgb(10, 39, 94);
+
+}
+/* CLEAR BUTTON
 } */
+.clearBtn a {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    right: 10%;
+    top: 90%;
+    margin-top: -25px;
+    margin-right: -25px;
+    background-color: #ffffff;
+    border-radius: 50px;
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    -webkit-box-shadow: 0px 0px 30px 0px rgba(247, 149, 29, 0.5);
+    -moz-box-shadow: 0px 0px 30px 0px rgba(247, 149, 29, 0.5);
+    box-shadow: 0px 0px 30px 0px rgba(247, 149, 29, 0.5);
+  }
+.clearBtn a > span {
+    background-color: #f5a700;
+    display: block;
+    height: 6px;
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    position: absolute;
+    top: 50%;
+    margin-top: -4px;
+    left: 7px;
+    width: 39px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+}
+.clearBtn a > span span {
+    display: block;
+    background-color: #ed7f00;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.clearBtn a > span.left {
+    transform: rotate(45deg);
+    transform-origin: center;
+}
+.clearBtn a > span.left .circle-left {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 0;
+}
+.clearBtn a > span.left .circle-right {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 33px;
+}
+.clearBtn a > span.right {
+    transform: rotate(-45deg);
+    transform-origin: center;
+}
+.clearBtn a > span.right .circle-left {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 0;
+}
+.clearBtn a > span.right .circle-right {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 33px;
+}
+.clearBtn a:hover > span {
+    background-color: #2faee0;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+  .clearBtn a:hover > span span {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    background-color: #008ac9;
+}
+.clearBtn a:hover > span.left .circle-left {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 33px;
+}
+.clearBtn a:hover > span.left .circle-right {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 0;
+}
+.clearBtn a:hover > span.right .circle-left {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 33px;
+}
+.clearBtn a:hover > span.right .circle-right {
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin-left: 0;
+}
 /* ======== TAB 1: GRID  ========= */
 /* .tab-container {
     display: flex;

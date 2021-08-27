@@ -33,6 +33,7 @@
                      <ion-searchbar class="searchWrapper" placeholder="Enter a word to search"></ion-searchbar>
 
                     <!-- START CONTENT -->
+                    
 					<div class="tab-container">
 						<div class="dword">
 							<img src="/assets/img/words/1.gif" />
