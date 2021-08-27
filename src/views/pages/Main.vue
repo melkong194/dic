@@ -23,12 +23,10 @@
 					></ion-searchbar>
 					<div class="searchedWord">
 						ebeykakkakankanjdidih
-						<!-- <a class="repeatButton"> -->
 						<ion-icon
 							class="repeatButton"
 							:icon="repeat"
 						></ion-icon>
-						<!-- </a> -->
 					</div>
 					<div
 						class="tab-container"
@@ -51,16 +49,16 @@
 							></audio>
 						</div>
 					</div>
-					<p>
+					<!-- <p>
 						<span v-for="i in this.items" :key="i.id">
 							{{ i.id + "-" + i.name + " | " }}
 						</span>
-					</p>
-					<p>
+					</p> -->
+					<!-- <p>
 						<span v-for="i in this.dropList" :key="i.id">
 							{{ i.id + "-" + i.name + " | " }}
 						</span>
-					</p>
+					</p> -->
 					<!-- END CONTENT -->
 				</div>
 
@@ -107,6 +105,8 @@
 						</span>
 					</a>
 				</div>
+                <!----- Clear button ----->
+                <a class="saveButton">OK</a>
 			</ion-content>
 		</div>
 	</ion-page>
@@ -141,42 +141,6 @@ export default defineComponent({
 			// { id: 9, name: "item 9", sound: "/assets/sylls/bang.wav" },
 		]);
 
-		// let sortable = document.querySelectorAll('#drop-box > li')
-
-		// sortable.forEach(item => {
-		// $(item).prop('draggable', true)
-		// item.addEventListener('dragstart', dragStart)
-		// item.addEventListener('drop', dropped)
-		// item.addEventListener('dragenter', cancelDefault)
-		// item.addEventListener('dragover', cancelDefault)
-		// })
-
-		// function dragStart (e) {
-		// var index = $(e.target).index()
-		// e.dataTransfer.setData('text/plain', index)
-		// }
-
-		// function dropped (e) {
-		// cancelDefault(e)
-
-		// let oldIndex = e.dataTransfer.getData('text/plain')
-		// let target = $(e.target)
-		// let newIndex = target.index()
-
-		// let dropped = $(this).parent().children().eq(oldIndex).remove()
-
-		// if (newIndex < oldIndex) {
-		//     target.before(dropped)
-		// } else {
-		//     target.after(dropped)
-		// }
-		// }
-
-		// function cancelDefault (e) {
-		// e.preventDefault()
-		// e.stopPropagation()
-		// return false
-		// }
 
 		const startDrag = (event, id) => {
 			event.dataTransfer.dropEffect = "move";

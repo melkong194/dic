@@ -173,23 +173,51 @@ ion-tabs .tab-selected{
     color: rgb(10, 39, 94);
 
 }
-/* CLEAR BUTTON
-} */
+/* ====Save BUTTON==== */
+.saveButton{
+    position: fixed;
+    left: 20px;
+    bottom: 80px;
+    display: inline-block;
+    text-decoration: none;
+    background-color: rgb(10, 39, 94);
+    color: rgb(173, 248, 164);
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    transition: .4s;
+    font-size: 17px;
+    font-weight: 600;
+    -webkit-box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
+    -moz-box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
+    box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
+}
+
+
+.saveButton:hover{
+    background: #87befd;
+     box-shadow: 0px 0px 0px 5px #668ad8;
+     color: rgb(10, 39, 94);
+}
+/* ====Clear BUTTON==== */
 .clearBtn a {
     width: 50px;
     height: 50px;
-    position: absolute;
-    right: 10%;
-    top: 90%;
+    position: fixed;
+    right: 45px;
+    bottom: 80px;
     margin-top: -25px;
     margin-right: -25px;
     background-color: #ffffff;
     border-radius: 50px;
     opacity: 1;
     transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-    -webkit-box-shadow: 0px 0px 30px 0px rgba(247, 149, 29, 0.5);
-    -moz-box-shadow: 0px 0px 30px 0px rgba(247, 149, 29, 0.5);
-    box-shadow: 0px 0px 30px 0px rgba(247, 149, 29, 0.5);
+    -webkit-box-shadow: 0px 0px 20px 0px rgba(247, 149, 29, 0.5);
+    -moz-box-shadow: 0px 0px 20px 0px rgba(247, 149, 29, 0.5);
+    box-shadow: 0px 0px 20px 0px rgba(247, 149, 29, 0.5);
   }
 .clearBtn a > span {
     background-color: #f5a700;
