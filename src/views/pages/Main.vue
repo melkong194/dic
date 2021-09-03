@@ -2,25 +2,16 @@
 	<ion-page>
 		<div id="contentBody">
 			<ion-content id="icontent">
-				<!-- *****************HEADER*********************** -->
-				<!-- <div class="headerWrapper">
-					<div class="iTitle">
-						<img
-							alt="logo"
-							height="25"
-							src="/assets/img/icon.png"
-						/>
-						Yolŋu Matha alphabet
-					</div>
-				</div> -->
-
-				<!-- *****************CONTENT*********************** -->
 
 				<div id="contentWrapper">
+                    <!-- ******** SEARCH BAR ******** -->
 					<ion-searchbar
 						class="searchWrapper"
 						placeholder="Enter a word to search"
 					></ion-searchbar>
+
+                    <!-- <button id="aa" style="height:50px;width: 100px; background-color:#000; z-index: 99" ref="testbm">Banh mi1111111</button> -->
+
 					<div class="searchedWord">
 						ebeykakkakankanjdidih
 						<ion-icon
@@ -28,6 +19,7 @@
 							:icon="repeat"
 						></ion-icon>
 					</div>
+                    <!-- ******** SYLLABLES ********* -->
 					<div
 						class="tab-container"
 						@drop="onDrop($event, 1)"
@@ -38,35 +30,21 @@
 							v-for="item in this.items"
 							:key="item.id"
 							class="dletter"
-							draggable="true"
-							@dragstart="startDrag($event, item.id)"
+                            :id="item.id"
 							@click="playSound('sound' + item.id)"
-						>
+						>     
 							{{ item.name }}
 							<audio
 								v-bind:ref="'sound' + item.id"
 								v-bind:src="item.sound"
-							></audio>
+							></audio>                      
 						</div>
 					</div>
-					<!-- <p>
-						<span v-for="i in this.items" :key="i.id">
-							{{ i.id + "-" + i.name + " | " }}
-						</span>
-					</p> -->
-					<!-- <p>
-						<span v-for="i in this.dropList" :key="i.id">
-							{{ i.id + "-" + i.name + " | " }}
-						</span>
-					</p> -->
-					<!-- END CONTENT -->
-				</div>
 
-				<!-- *****************FOOTER*********************** -->
-				<div class="main-footer">
+                    <div class="main-footer">
 					<div
 						class="drop-area"
-						id="drop-box"
+						id="dropBox"
 						@drop="onDrop($event, 2)"
 						@dragenter.prevent
 						@dragover.prevent
@@ -75,13 +53,14 @@
 							v-for="item in this.dropList"
 							:key="item.id"
 							class="dletter"
+                            id="item.id"
 							draggable="true"
 							@dragstart="startDrag($event, item.id)"
-							@click="playSound('drop' + item.id)"
+							@click="playSound('audio' + item.id)"
 						>
 							{{ item.name }}
 							<audio
-								:ref="'drop' + item.id"
+								:ref="'audio' + item.id"
 								v-bind:src="item.sound"
 							></audio>
 						</div>
@@ -92,6 +71,11 @@
 						></a>
 					</div>
 				</div>
+					
+				</div>
+                 
+				<!-- *****************FOOTER*********************** -->
+				
 				<!----- Clear button ----->
 				<div class="clearBtn" @click="clearDrop">
 					<a>
@@ -105,14 +89,15 @@
 						</span>
 					</a>
 				</div>
-                <!----- Clear button ----->
-                <a class="saveButton">OK</a>
+				<!----- Clear button ----->
+				<a class="saveButton">OK</a>
 			</ion-content>
 		</div>
 	</ion-page>
 </template>
 
 <script>
+import { createGesture } from '@ionic/vue';
 import { IonContent, IonPage, IonIcon } from "@ionic/vue";
 import { play, repeat } from "ionicons/icons";
 import { defineComponent } from "vue";
@@ -124,55 +109,136 @@ export default defineComponent({
 		IonPage,
 		IonIcon,
 	},
+    // data(){
+    //     const items = ref([
+	// 		{ id: 0, name: "be", sound: "/assets/sylls/be.wav" },
+	// 		{ id: 1, name: "bey", sound: "/assets/sylls/bey.wav" },
+	// 		{ id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
+	// 		{ id: 3, name: "kka", sound: "/assets/sylls/kka.wav" },
+	// 		{ id: 4, name: "kan", sound: "/assets/sylls/kan.wav" },
+	// 		{ id: 5, name: "kanj", sound: "/assets/sylls/kanj.wav" },
+	// 		{ id: 6, name: "di", sound: "/assets/sylls/di.wav" },
+	// 		{ id: 7, name: "dih", sound: "/assets/sylls/dih.wav" },
+	// 	]);
 
-	setup() {
-		const items = ref([
-			{ id: 0, name: "be", sound: "/assets/sylls/a.wav" },
-			{ id: 1, name: "bey", sound: "/assets/sylls/ba.wav" },
-			{ id: 2, name: "ka", sound: "/assets/sylls/bad.wav" },
-			{ id: 3, name: "kka", sound: "/assets/sylls/badj.wav" },
-			{ id: 4, name: "kan", sound: "/assets/sylls/bah.wav" },
-			{ id: 5, name: "kanj", sound: "/assets/sylls/bak.wav" },
-			{ id: 6, name: "di", sound: "/assets/sylls/bal.wav" },
-			{ id: 7, name: "dih", sound: "/assets/sylls/balh.wav" },
+	// 	const dropList = ref([
+	// 	]);
+    //     return{
+
+    //     }
+    // },
+    mounted() {
+        let dragEl = document.getElementsByClassName('dletter');
+        for(let i =0; i < dragEl.length; i++){
+            let c = dragEl[i];
+
+            
+            const gesture = createGesture({
+                el: c,
+                gestureName: "drag",
+                disableScroll: true,
+                threshold: 0,
+                // onStart: event =>{
+                //     if(isBegin){
+                //         startpx = event.deltaX;
+                //         startpy = event.deltaY;
+                //         isBegin = false;
+                //     }
+                // },
+                onMove: e =>{
+                    c.style.transform = `translate(${e.deltaX}px, ${e.deltaY}px)`;    
+                    if(this.onDropbox(e.currentX, e.currentY)){
+                        c.style.position = 'sticky';
+                        c.style.zIndex = 9;
+                        c.style.border = "2px solid green";
+                        if(this.onDropbox(e.currentX, e.currentY)){
+                            c.style.border = "1px solid aqua";
+                        }
+                    }       
+                },
+                onEnd: e =>{
+                    c.style.transform = `translate(0px, 0px)`;
+                    c.style.border = "none";
+                    // console.log(e.deltaY);
+                    // console.log(this.onDropbox(e.currentX, e.currentY));
+                    if(this.onDropbox(e.currentX, e.currentY)){
+                        gesture.enable(false); 
+                        let a  = c.getAttribute('id');
+                        // console.log(a);                        
+                        this.dragAction(a);
+                        // c.remove();
+                    }
+                }
+            });
+            gesture.enable(true);
+        }
+        // b.forEach( el => {
+        //     console.log(el);
+        // })
+        // let c = this.$refs.testbm;
+        
+    },
+	
+    setup(){
+        const items = ref([
+			{ id: 0, name: "be", sound: "/assets/sylls/be.wav" },
+			{ id: 1, name: "bey", sound: "/assets/sylls/bey.wav" },
+			{ id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
+			{ id: 3, name: "kka", sound: "/assets/sylls/kka.wav" },
+			{ id: 4, name: "kan", sound: "/assets/sylls/kan.wav" },
+			{ id: 5, name: "kanj", sound: "/assets/sylls/kanj.wav" },
+			{ id: 6, name: "di", sound: "/assets/sylls/di.wav" },
+			{ id: 7, name: "dih", sound: "/assets/sylls/dih.wav" },
 		]);
 
 		const dropList = ref([
 			// { id: 9, name: "item 9", sound: "/assets/sylls/bang.wav" },
 		]);
+        const dragAction=(itemID) =>{
+            const item = items.value.find((item) => item.id == itemID);
+            items.value.splice(items.value.indexOf(item), 1);
+            dropList.value.push(item);
+        };
 
-
-		const startDrag = (event, id) => {
+        const startDrag=(event, id) => {
 			event.dataTransfer.dropEffect = "move";
 			event.dataTransfer.effectAllowed = "move";
 			event.dataTransfer.setData("itemId", id);
 		};
 
-		const onDrop = (event, option) => {
+		const onDrop=(event, option) => {
 			const itemID = event.dataTransfer.getData("itemId");
 			if (option == 2) {
 				const item = items.value.find((item) => item.id == itemID);
 				items.value.splice(items.value.indexOf(item), 1);
 				dropList.value.push(item);
-				// event.DataTransfer.clearData();
 			} else {
 				const item = dropList.value.find((item) => item.id == itemID);
 				items.value.push(item);
-				dropList.value.splice(dropList.value.indexOf(item), 1);
-				// event.DataTransfer.clearData();
+				dropList.value.splice(dropList.value.indexOf(item), 1);				
 			}
-		};
+		}
 
-		return {
+        return {
 			startDrag,
 			onDrop,
-			play,
-			items,
-			dropList,
-			repeat,
+            dragAction,
+            items, 
+            dropList,
+            repeat,
+            play
 		};
-	},
+    },
 	methods: {
+        onDropbox(x,y){
+            let elem = document.querySelector('#dropBox');
+            let dropBox = elem.getBoundingClientRect();
+            if(dropBox.left >= x) return false;
+            if(dropBox.right <= x) return false;
+            if(dropBox.top >= y) return false;            
+            
+            return true;
+        },
 		playSound(index) {
 			this.$refs[index].play();
 		},
@@ -194,11 +260,11 @@ export default defineComponent({
 			if (sounds.length > 0) {
 				sounds[0].play();
 				sounds[0].addEventListener("ended", () => {
-                    sounds.shift();
+					sounds.shift();
 					return this.playSequence(sounds);
 				});
 			}
-		},
+		}
 	},
 });
 </script>

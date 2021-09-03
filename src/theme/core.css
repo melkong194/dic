@@ -1,17 +1,18 @@
 /* ======== BODY CONTENT ========= */
 
-ion-content, #icontent{
-    height: calc(100% - 47px);   
-    top: 0;
-}
+/* ion-content, #icontent{
+    overflow: hidden;
+} */
 
 #contentBody{
     height: 100%;
+    /* overflow: hidden; */
 }
 
 #contentWrapper{
     padding: 5px 8px;
     background-color: #fff;
+    overflow: hidden;
 }
 
 /* ======== HEADER ========= */
@@ -41,6 +42,7 @@ ion-content, #icontent{
     right: 0;
     left: 0;
     height: 47px;
+    z-index: 0;
 }
 
 ion-tabs ion-tab-bar{
@@ -70,7 +72,6 @@ ion-tabs .tab-selected{
     justify-content: flex-start;
     min-height: calc(100vh * 0.65) ;
     background-color: #fbfbfb;
-    /* height: calc(100% - 70px); */
 }
 .main-footer{
     width: 100%;
@@ -113,6 +114,7 @@ ion-tabs .tab-selected{
 
 .tab-container > .dletter {
     background-color: #B9D980;
+    color: #000;
     margin: 3px;
     width: 120px;
     height: 55px;
@@ -124,9 +126,11 @@ ion-tabs .tab-selected{
     border: 1px solid #eee;
     background-image: linear-gradient(-180deg, rgb(224, 222, 247) 1%, #ffffff 100%);
     box-shadow: 0 0px 0px 0 #fafafa, 
-                0 -1px 2px #9493b3 inset, 
+                0 -1px 2px #3d3d3d inset, 
                 0 1px 1px #948eca inset, 
                 0 1px 1px 0 #b2b3d4 inset;
+    /* border: 1px solid #3d3d3d,  */
+;
 }
 .tab-container > .dletter:hover {
     border: 1px solid rgb(10, 5, 85);
@@ -412,18 +416,11 @@ ion-searchbar{
         height: 65px;
     }
 
-    ion-content, #icontent{
-        height: calc(100% - 65px);   
-        top: 0;
-        background-color: #eee;
-    }
-
     .wrapperButton{
         width: 10%;
     }
 
     .drop-area > .dletter{
-
         font-size: 22px;
     }
 }
