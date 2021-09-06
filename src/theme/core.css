@@ -5,14 +5,14 @@
 } */
 
 #contentBody{
-    height: 100%;
+    height: calc(100% - 65px);
     /* overflow: hidden; */
 }
 
 #contentWrapper{
+    /* height: calc(100vh); */
     padding: 5px 8px;
     background-color: #fff;
-    overflow: hidden;
 }
 
 /* ======== HEADER ========= */
@@ -66,19 +66,62 @@ ion-tabs .tab-selected{
     background-color: #211545;
 }
 /* ======== SINGLE MAIN ========= */
+.searchWrapper{
+    /* background-color: #fbfbfb; */
+    /* background-color: green; */
+    padding: 5px 15px;
+    width: 100%;
+    display: flex;
+}
+
+.searchBar{
+    margin-left: 3px;
+    width: 100%;
+    border: 0;
+    position: relative;
+}
+input:focus{
+    outline: none;
+}
+.searchInput{
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    width: 100%;
+    height: 100%;
+    background-color: #fbfbfb;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 20px;
+    padding-right: 50px;
+    padding-left: 20px;
+}
+.searchBar > ion-icon{
+    position: absolute;
+    display: block;
+    top: 5px;
+    right: 0px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    color: rgb(129, 127, 127);
+}
+
 .tab-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    min-height: calc(100vh * 0.65) ;
+    min-height: calc(100vh * 0.78) ;
+    /* min-height: 100vh ; */
     background-color: #fbfbfb;
+    overflow: hidden;
 }
 .main-footer{
     width: 100%;
     display: flex;
     max-height: 70px;
     min-height: 70px;
-    position: fixed;
+    position: sticky;
     bottom: 0;
     right: 0;
     left: 0;
@@ -105,12 +148,7 @@ ion-tabs .tab-selected{
 #iIcon{
     padding-top: 5px;
 }
-.drop-area{
-    display: flex;
-    width: 100%;
-    border: 5px dashed rgb(23, 90, 129);
-    height: 70px;
-}
+
 
 .tab-container > .dletter {
     background-color: #B9D980;
@@ -135,7 +173,12 @@ ion-tabs .tab-selected{
 .tab-container > .dletter:hover {
     border: 1px solid rgb(10, 5, 85);
 }
-.drop-area > .dletter{
+#dropBox{
+    display: flex;
+    width: 100%;
+    height: 70px;
+}
+#dropBox .dletter{
     width: fit-content;
     color: white;
     margin: 7px 3px;
@@ -152,9 +195,15 @@ ion-tabs .tab-selected{
                 0 1px 1px 0 #b2b3d4 inset;
     
 }
-.drop-area > .dletter:hover{
+#dropBox .dletter:hover{
     border: 1px solid rgb(24, 119, 209);   
 }
+.dropArea{
+    width: 100%;
+    border: 5px dashed rgb(23, 90, 129);
+    height: 70px;
+}
+/* ======== SEARCH */
 .searchedWord{
     width: 100%;
     color: rgb(10, 39, 94);
@@ -304,6 +353,7 @@ ion-tabs .tab-selected{
     transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
     margin-left: 0;
 }
+
 /* ======== TAB 1: GRID  ========= */
 /* .tab-container {
     display: flex;
@@ -420,7 +470,7 @@ ion-searchbar{
         width: 10%;
     }
 
-    .drop-area > .dletter{
+    #dropBox > .dletter{
         font-size: 22px;
     }
 }
