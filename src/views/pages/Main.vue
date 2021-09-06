@@ -61,7 +61,7 @@
 
 			<div class="main-footer">
 				<div class="dropArea">
-					<div id="dropBox">
+					<div id="dropBox" @click="this.changeOutput">
 						<div
 							class="dletter"
 							v-for="item in this.sorted"
@@ -124,6 +124,7 @@ export default defineComponent({
 			sorted: [],
 			sylls: [],
 			searchValue: "",
+			isText: false,
 		};
 	},
 	watch: {
@@ -156,21 +157,29 @@ export default defineComponent({
 		},
 	},
 	methods: {
+		changeOutput() {
+			this.isText = !this.isText;
+			let dragEl = document.getElementById("dropBox").children;
+			if (!this.isText) {
+				for (let i = 0; i < dragEl.length; i++) {
+					let c = dragEl[i];
+					c.style.margin = "7px 1px";
+					c.style.padding = "15px 6px";
+				}
+			} else {
+				for (let i = 0; i < dragEl.length; i++) {
+					let c = dragEl[i];
+					c.style.margin = "7px 0px";
+					c.style.padding = "15px 0px";
+				}
+			}
+		},
 		clearDrop() {
 			if (this.getWordByName(this.searchValue)) {
 				let word = this.getWordByName(this.searchValue);
 				this.updateSylls(word.sylls);
 				this.updateSorted([]);
 			}
-			// let word = "";
-			// if (this.searchValue) {
-			// 	if (this.getWordByName(this.searchValue)) {
-			// 		word = this.getWordByName(this.searchValue);
-			// 		this.updateSylls(word.sylls);
-			// 		this.updateSorted([]);
-			// 	}
-			// }
-			// return word;
 		},
 		forceRerender() {
 			this.updateEvent(false);
@@ -180,7 +189,6 @@ export default defineComponent({
 		},
 		updateEvent(on) {
 			// index=1 : drag in , index=2 : drag out
-
 			let dragEl = document.getElementById("dragBox").children;
 			for (let i = 0; i < dragEl.length; i++) {
 				let c = dragEl[i];
