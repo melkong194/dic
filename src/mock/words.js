@@ -42,11 +42,11 @@ let words = [
         done: false,
         store: [],
         sylls: [
-            { id: 0, name: "be", sound: "/assets/sylls/be.wav" },
-            { id: 1, name: "bey", sound: "/assets/sylls/bey.wav" },
-            { id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
-            { id: 3, name: "kka", sound: "/assets/sylls/kka.wav" },
-            { id: 4, name: "kan", sound: "/assets/sylls/kan.wav" }    
+            { id: 7, name: "dih", sound: "/assets/sylls/dih.wav" },
+            { id: 8, name: "be", sound: "/assets/sylls/be.wav" },
+            { id: 9, name: "bey", sound: "/assets/sylls/bey.wav" },
+            { id: 10, name: "be", sound: "/assets/sylls/be.wav" },
+            { id: 11, name: "bey", sound: "/assets/sylls/bey.wav" }, 
         ]
             
     },

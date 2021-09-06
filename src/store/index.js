@@ -13,7 +13,7 @@ const store = createStore({
             var word = null;
             for(let key in state.words){
                 let x = JSON.parse(JSON.stringify(state.words[key]))
-                if(x.name==name){
+                if(x.name.toUpperCase() == name.toUpperCase()){
                     word = x;
                     break;
                 }

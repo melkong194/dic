@@ -14,7 +14,7 @@
                         @ionClear="searchCleared($event)"
 					></ion-searchbar> -->
 					<div class="searchWrapper">
-						<!-- <ion-back-button></ion-back-button> -->
+						<ion-back-button></ion-back-button>
 						<span class="searchBar">
 							<input
 								class="searchInput"
@@ -37,14 +37,9 @@
 					</div>
 
 					<!-- ******** SYLLABLES ********* -->
-					<p>{{ this.sorted }}</p>
-					<p>{{ this.sylls }}</p>
-					<div
-						class="tab-container"
-						id="dragBox"
-						@dragenter.prevent
-						@dragover.prevent
-					>
+					<!-- <p>{{ this.sorted }}</p>
+					<p>{{ this.sylls }}</p> -->
+					<div class="tab-container" id="dragBox">
 						<div
 							class="dletter"
 							v-for="item in this.sylls"
@@ -66,7 +61,7 @@
 
 			<div class="main-footer">
 				<div class="dropArea">
-					<div id="dropBox" @dragenter.prevent @dragover.prevent>
+					<div id="dropBox">
 						<div
 							class="dletter"
 							v-for="item in this.sorted"
@@ -126,138 +121,132 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			sorted: [
-				{ id: 1, name: "be", sound: "/assets/sylls/be.wav" },
-				{ id: 6, name: "be", sound: "/assets/sylls/be.wav" },
-			],
-			sylls: [
-				{ id: 0, name: "be", sound: "/assets/sylls/be.wav" },
-				{ id: 4, name: "bey", sound: "/assets/sylls/bey.wav" },
-				{ id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
-				{ id: 5, name: "kka", sound: "/assets/sylls/kka.wav" },
-				{ id: 3, name: "kan", sound: "/assets/sylls/kan.wav" },
-			],
-
+			sorted: [],
+			sylls: [],
 			searchValue: "",
 		};
 	},
-	watch: {},
+	watch: {
+		sorted: function () {
+			this.forceRerender();
+		},
+	},
 	mounted() {
-		this.updateEvent(1);
-		this.updateEvent(2);
+		this.updateEvent(true);
 	},
 	setup() {
-		// const sylls = ref([
-		// 	{ id: 0, name: "be", sound: "/assets/sylls/be.wav" },
-		//     { id: 1, name: "bey", sound: "/assets/sylls/bey.wav" },
-		//     { id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
-		//     { id: 3, name: "kka", sound: "/assets/sylls/kka.wav" },
-		//     { id: 4, name: "kan", sound: "/assets/sylls/kan.wav" },
-		// ]);
-		// const sorted = ref([
-		// 	{ id: 9, name: "item 9", sound: "/assets/sylls/bang.wav" },
-		// ]);
 		return {
 			repeat,
 			play,
 			close,
-			// sorted,
-			// sylls
 		};
 	},
 	computed: {
 		...mapGetters(["getWordByName"]),
 		searchedResult() {
+			let word = "";
 			if (this.searchValue) {
-				let word = this.getWordByName(this.searchValue);
-				this.updateSylls(word.sylls);
-				// console.log(this.items);
-				// console.log(this.dropList);
-				return word;
+				if (this.getWordByName(this.searchValue)) {
+					word = this.getWordByName(this.searchValue);
+					this.updateSylls(word.sylls);
+					this.updateSorted([]);
+				}
 			}
-			return "";
+			return word;
 		},
 	},
 	methods: {
-		updateEvent(index) {
+		clearDrop() {
+			if (this.getWordByName(this.searchValue)) {
+				let word = this.getWordByName(this.searchValue);
+				this.updateSylls(word.sylls);
+				this.updateSorted([]);
+			}
+			// let word = "";
+			// if (this.searchValue) {
+			// 	if (this.getWordByName(this.searchValue)) {
+			// 		word = this.getWordByName(this.searchValue);
+			// 		this.updateSylls(word.sylls);
+			// 		this.updateSorted([]);
+			// 	}
+			// }
+			// return word;
+		},
+		forceRerender() {
+			this.updateEvent(false);
+			this.$nextTick(() => {
+				this.updateEvent(true);
+			});
+		},
+		updateEvent(on) {
 			// index=1 : drag in , index=2 : drag out
-			let dragEl = null;
-			if (index == 1)
-				dragEl = document.getElementById("dragBox").children;
-			else dragEl = document.getElementById("dropBox").children;
 
-			let dropBox = document.querySelector(".dropArea");
-			let contentEl = document.querySelector("#icontent");
-			let isAction = false;
-
+			let dragEl = document.getElementById("dragBox").children;
 			for (let i = 0; i < dragEl.length; i++) {
 				let c = dragEl[i];
-				const gesture = createGesture({
-					el: c,
-					gestureName: "drag",
-					disableScroll: true,
-					threshold: 0,
-					onStart: () => {
-						contentEl.setAttribute("scroll-y", false);
-					},
-					onMove: (e) => {
-						c.style.transform = `translate(${e.deltaX}px, ${e.deltaY}px)`;
-						if (index == 1) {
-							if (this.onDropbox(e.currentX, e.currentY)) {
-								dropBox.style.border = "5px dashed yellow";
-							} else {
-								dropBox.style.border =
-									"5px dashed rgb(23, 90, 129)";
-							}
-						}
-					},
-					onEnd: (e) => {
-						contentEl.setAttribute("scroll-y", true);
-						dropBox.style.border = "5px dashed rgb(23, 90, 129)";
-						c.style.transform = `translate(0px, 0px)`;
-						let a = c.getAttribute("id");
-						if (index == 1) {
-							if (this.onDropbox(e.currentX, e.currentY)) {
-								c.remove();
-								console.log(a);
-								this.dragAction(a, index);
-								isAction = true;
-							}
-						} else {
-							if (!this.onDropbox(e.currentX, e.currentY)) {
-								c.remove();
-								console.log(a);
-								this.dragAction(a, index);
-								isAction = true;
-							}
-						}
-					},
-				});
-				gesture.enable(true);
-                console.log(gesture);
-				if (isAction) {
-					this.updateGesture();
-				}
+				this.addGestureEvent(c, 1, on);
+			}
+
+			dragEl = document.getElementById("dropBox").children;
+			for (let i = 0; i < dragEl.length; i++) {
+				let c = dragEl[i];
+				this.addGestureEvent(c, 2, on);
 			}
 		},
-		addGestureEvent() {
-			// dragEl = document.getElementsByClassName("dletter");
-			// for (let i = 0; i < dragEl.length; i++) {
-			// 	let c = dragEl[i];
-			//     gest
-			// this.updateEvent(1);
-			// this.updateEvent(2);
+		addGestureEvent(c, index, on) {
+			let dropBox = document.querySelector(".dropArea");
+			let contentEl = document.querySelector("#icontent");
+			const gesture = createGesture({
+				el: c,
+				gestureName: "drag",
+				disableScroll: true,
+				threshold: 0,
+				gesturePriority: 10,
+				onStart: () => {
+					contentEl.setAttribute("scroll-y", false);
+				},
+				onMove: (e) => {
+					c.style.transform = `translate(${e.deltaX}px, ${e.deltaY}px)`;
+					if (index == 1) {
+						if (this.onDropbox(e.currentX, e.currentY)) {
+							dropBox.style.border = "5px dashed yellow";
+						} else {
+							dropBox.style.border =
+								"5px dashed rgb(23, 90, 129)";
+						}
+					}
+				},
+				onEnd: (e) => {
+					contentEl.setAttribute("scroll-y", true);
+					dropBox.style.border = "5px dashed rgb(23, 90, 129)";
+					c.style.transform = `translate(0px, 0px)`;
+					let a = c.getAttribute("id");
+					if (index == 1) {
+						if (this.onDropbox(e.currentX, e.currentY)) {
+							c.remove();
+							this.dragAction(a, index);
+						}
+					} else {
+						if (!this.onDropbox(e.currentX, e.currentY)) {
+							c.remove();
+							this.dragAction(a, index);
+						}
+					}
+				},
+			});
+			if (on) gesture.enable(true);
+			else gesture.destroy();
 		},
-		// updateSylls(items) {
-		// 	this.sylls = items;
-		// },
-		// updateSorted(items) {
-		// 	this.sorted = items;
-		// },
+		updateSylls(items) {
+			this.sylls = items;
+		},
+		updateSorted(items) {
+			this.sorted = items;
+		},
 		dragAction(itemID, option) {
 			//option = 1: drag from dragBox
 			//option = 2: drag from dropBox
-			console.log(itemID);
+
 			let x = JSON.parse(JSON.stringify(this.sylls));
 			let y = JSON.parse(JSON.stringify(this.sorted));
 			if (option == 1) {
@@ -272,7 +261,6 @@ export default defineComponent({
 				this.sorted = y;
 			} else {
 				let result = this.FindItemPosition(y, itemID);
-				console.log(result);
 
 				//update sylls list
 				y.splice(result[1], 1);
@@ -287,7 +275,6 @@ export default defineComponent({
 			let item = null;
 			let pos = null;
 			for (let x = 0; x < list.length; x++) {
-				console.log(list[x]);
 				if (list[x].id == id) {
 					item = list[x];
 					pos = x;
@@ -296,16 +283,6 @@ export default defineComponent({
 			}
 			return [item, pos];
 		},
-		// removeEl(list, index) {
-		// 	let items = JSON.parse(JSON.stringify(list));
-		// 	items.splice(index, 1);
-		// 	return items;
-		// },
-		// addEl(list, item) {
-		// 	let items = JSON.parse(JSON.stringify(list));
-		// 	items.push(item);
-		// 	return items;
-		// },
 		onDropbox(x, y) {
 			let elem = document.querySelector("#dropBox");
 			let dropBox = elem.getBoundingClientRect();
@@ -315,16 +292,7 @@ export default defineComponent({
 			return true;
 		},
 		playSound(index) {
-			console.log(index);
 			this.$refs[index].play();
-		},
-		clearDrop() {
-			this.sorted.forEach((element) => {
-				this.items.push(element);
-			});
-			this.sorted = [];
-			// this.setup.$forceUpdate();
-			// this.mounted.$forceUpdate();
 		},
 		playString() {
 			let sounds = [];
