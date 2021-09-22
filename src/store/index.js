@@ -20,35 +20,51 @@ const store = createStore({
             }
             return word;
         },
-        getSylls:state => {
-            return JSON.parse(JSON.stringify(state.sylls));
+        getWordById: state => id => {
+            if(id==null) id=1;
+            var word = null;
+            for(let key in state.words){
+                let x = JSON.parse(JSON.stringify(state.words[key]));
+                if(x.id == id){
+                    word = x;                    
+                    break;
+                }
+            }
+            return word;
         },
-        getSortedSylls:state => {
-            return JSON.parse(JSON.stringify(state.sortedSylls));
+        getWordsLength: state => {
+            let x = JSON.parse(JSON.stringify(state.words));
+            return x.length;
         },
+        // getSylls:state => {
+        //     return JSON.parse(JSON.stringify(state.sylls));
+        // },
+        // getSortedSylls:state => {
+        //     return JSON.parse(JSON.stringify(state.sortedSylls));
+        // },
     },
     mutations: {
-        SET_LIST_WORDS: (state, data) => {
-            state.words = data;
-        },
-        SET_LIST_SYLLS: (state, data) => {
-            state.sylls = data
-        },
-        SET_LIST_SORTED: (state, data) => {
-            state.sorted = data
-        },
+        // SET_LIST_WORDS: (state, data) => {
+        //     state.words = data;
+        // },
+        // SET_LIST_SYLLS: (state, data) => {
+        //     state.sylls = data
+        // },
+        // SET_LIST_SORTED: (state, data) => {
+        //     state.sorted = data
+        // },
     },
     actions: {
-        updateSylls({ commit }, data) {        
-            commit('SET_LIST_SYLLS', data);
-        }, 
-        updateSorted({ commit }, data) {        
-            commit('SET_LIST_SORTED', data);
-        }, 
-        onWordsListener ({ commit }) { 
-            let data = words;
-            commit('SET_LIST_WORDS', data);   
-        }
+        // updateSylls({ commit }, data) {        
+        //     commit('SET_LIST_SYLLS', data);
+        // }, 
+        // updateSorted({ commit }, data) {        
+        //     commit('SET_LIST_SORTED', data);
+        // }, 
+        // onWordsListener ({ commit }) { 
+        //     let data = words;
+        //     commit('SET_LIST_WORDS', data);   
+        // }
     }
 });
 

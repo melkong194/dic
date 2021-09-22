@@ -11,7 +11,7 @@
 
 #contentWrapper{
     /* height: calc(100vh); */
-    padding: 5px 8px;
+    padding: 5px 48px;
     background-color: #fff;
 }
 
@@ -69,9 +69,10 @@ ion-tabs .tab-selected{
 .searchWrapper{
     /* background-color: #fbfbfb; */
     /* background-color: green; */
-    padding: 5px 15px;
+    padding: 5px 45px;
     width: 100%;
     display: flex;
+    height: 60px;
 }
 
 .searchBar{
@@ -95,6 +96,7 @@ input:focus{
     font-size: 20px;
     padding-right: 50px;
     padding-left: 20px;
+    color: #000;
 }
 .searchBar > ion-icon{
     position: absolute;
@@ -181,18 +183,18 @@ input:focus{
 #dropBox .dletter{
     width: fit-content;
     color: white;
-    margin: 7px 1px;
+    margin: 7px 2px;
     padding: 15px 6px;
     font-size: 18px;
     text-align: center;
     flex-wrap: wrap;
     border-radius: 3px;
-    border: 1px solid rgb(9, 3, 31);
     background-image: linear-gradient(-180deg, rgb(14, 1, 58) 1%, #120744 100%);
-    box-shadow: 0 0px 0px 0 #fafafa, 
+    /* box-shadow: 0 0px 0px 0 #fafafa, 
                 0 -1px 2px #2721e0 inset, 
                 0 1px 1px #4330f0 inset, 
-                0 1px 1px 0 #b2b3d4 inset;
+                0 1px 1px 0 #b2b3d4 inset; */
+    border: 1px solid #b2b3d4;
     
 }
 #dropBox .dletter:hover{
@@ -210,7 +212,9 @@ input:focus{
     text-align: center;
     font-size: 30px;
     font-weight: 700;
-    padding: 20px;
+    display: flex;
+    padding: 10px 0;
+    /* padding: 20px; */
 }
 .searchedWord > .repeatButton{
     margin: 0 20px;
@@ -226,34 +230,109 @@ input:focus{
     color: rgb(10, 39, 94);
 
 }
+.searchedWord audio {
+    height: 40px;
+    width: 100%;
+}
+.searchOpen{
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    border-radius: 5px;
+    background-image: linear-gradient(-180deg, rgb(247, 250, 240) 1%, #d4f5e0 100%);
+    box-shadow: 0 0px 0px 0 #fafafa, 
+                0 -1px 2px #3d3d3d inset, 
+                0 1px 1px #948eca inset, 
+                0 1px 1px 0 #b2b3d4 inset;
+    color: rgb(2, 68, 18);
+    margin: 0px 10px;
+    cursor: pointer;
+}
+.searchClose{
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    border-radius: 5px;
+    background-image: linear-gradient(-180deg, rgb(247, 250, 240) 1%, #ecc8b2 100%);
+    box-shadow: 0 0px 0px 0 #fafafa, 
+                0 -1px 2px #3d3d3d inset, 
+                0 1px 1px #948eca inset, 
+                0 1px 1px 0 #b2b3d4 inset;
+    color: rgb(65, 9, 16);
+    margin: 0 10px;
+    cursor: pointer;
+}
+.record{
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    border-radius: 50%;
+    background-image: linear-gradient(-180deg, rgb(247, 250, 240) 1%, #f8f5c8 100%);
+    box-shadow: 0 0px 0px 0 #fafafa, 
+                0 -1px 2px #3d3d3d inset, 
+                0 1px 1px #948eca inset, 
+                0 1px 1px 0 #b2b3d4 inset;
+    color: #000;
+    margin: 0 10px;
+    cursor: pointer;
+}
 /* ====Save BUTTON==== */
-.saveButton{
+.fixedBtn{
     position: fixed;
-    left: 20px;
-    bottom: 80px;
     display: inline-block;
     text-decoration: none;
-    background-color: rgb(10, 39, 94);
+    background-color: #eee;
     color: rgb(173, 248, 164);
-    width: 50px;
-    height: 50px;
     line-height: 50px;
-    border-radius: 50%;
     text-align: center;
     vertical-align: middle;
     transition: .4s;
     font-size: 17px;
     font-weight: 600;
+    cursor: pointer;
+}
+.fixedbtn:hover{
+    background: #87befd;
+     box-shadow: 0px 0px 0px 5px #668ad8;
+     color: rgb(10, 39, 94);
+}
+.btnCir{
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
     -webkit-box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
     -moz-box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
     box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
 }
+.btnRec{
+    border-radius: 1%;
+    width: 50px;
+    height: 35px;
+    -webkit-box-shadow: 0px 0px 1px 1px #dcd7f1;
+    -moz-box-shadow: 0px 0px 1px 1px #dcd7f1;
+    box-shadow: 0px 0px 1px 1px #dcd7f1;
+}
+.store{
+    left: 0px;
+    bottom: 80px;
+}
+.next{
+    right: 0px;
+    top: 200px;
+}
+.prev{
+    left: 0px;
+    top: 200px;
+}
+.dir-icon{
+    color: rgb(129, 127, 127);
+    font-size: 30px; 
+}
 
-
-.saveButton:hover{
-    background: #87befd;
-     box-shadow: 0px 0px 0px 5px #668ad8;
-     color: rgb(10, 39, 94);
+.like-icon{
+    color: green; 
+    font-size: 30px; 
+    padding-top: 8px;
 }
 /* ====Clear BUTTON==== */
 .clearBtn a {
@@ -457,6 +536,41 @@ ion-searchbar{
     /* #banner > img{
         height: 20%;
     } */
+    .searchedWord audio {
+        height: 50px;
+        width: 100%;
+    }
+    .searchOpen{
+        height: 50px;
+        width: 50px;       
+        margin: 0px 10px;
+        margin-left: 50px;
+    }
+    .searchClose{
+        height: 50px;
+        width: 50px;
+        margin: 0 10px;
+        margin-left: 50px;
+    }
+    .record{
+        height: 50px;
+        width: 50px;
+        margin: 0 10px;
+        margin-right: 50px;
+    }
+
+    .store{
+        left: 20px;
+        bottom: 80px;
+    }
+    .prev{
+        left: 20px;
+        top: 200px;
+    }
+    .next{
+        right: 20px;
+        top: 200px;
+    }
 
     #contentWrapper{
         padding: 0px 90px;
