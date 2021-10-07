@@ -7,7 +7,7 @@
 <script>
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
 import { defineComponent } from "vue";
-import { mapActions } from 'vuex';
+// import { mapActions } from 'vuex';
 export default defineComponent({
 	name: "App",
 	components: {
@@ -15,12 +15,12 @@ export default defineComponent({
 		IonRouterOutlet,
 	},
 	created() {
-        this.onWordsListener
+        // this.onWordsListener
     },
 	methods: {
-		...mapActions([
-			"onWordsListener",
-		]),
+		// ...mapActions([
+		// 	"onWordsListener",
+		// ]),
 	},
 });
 </script>

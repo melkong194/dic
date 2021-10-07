@@ -16,25 +16,28 @@
 				<div class="searchedWord">
 					<ion-icon
 						v-if="!this.isSearch"
-						@click="openSearchBox"
+						@click="toggleSearchBox"
 						class="searchOpen"
 						:icon="search"
 					></ion-icon>
 					<ion-icon
 						v-if="this.isSearch"
-						@click="closeSearchBox"
+						@click="toggleSearchBox"
 						class="searchClose"
 						:icon="close"
 					></ion-icon>
 					<audio controls ref="wordAudio">
-						<source
-							:src="this.word.sound"
-							type="audio/mpeg"
-							
-						/>
+						<source :src="this.word.sound" type="audio/mpeg" />
 						Your browser does not support the audio element.
 					</audio>
-					<ion-icon class="record" :icon="mic"></ion-icon>
+					<ion-icon
+						class="record"
+						:icon="mic"
+						@click="
+							handleStartRecord();
+							toggleRecordPanel();
+						"
+					></ion-icon>
 				</div>
 				<div v-if="this.searchedResult"></div>
 				<div id="contentWrapper">
@@ -55,7 +58,7 @@
 					<p>STRING: {{ this.searchValue }}</p>
                     <p>WORD: {{ this.word }}</p>
                     <p>Length: {{this.getWordsLength}}, id: {{this.id}}</p> -->
-					
+
 					<!-- <div class="tab-container" id="dragBox" v-if="this.searchedResult"> -->
 					<div class="tab-container" id="dragBox">
 						<div
@@ -79,9 +82,9 @@
 
 			<div class="main-footer">
 				<div class="dropArea">
-					<div id="dropBox" @click="this.changeOutput($event)">
+					<div id="dropBox" @click="this.toggleOutput($event)">
 						<div
-							class="dletter"
+							class="dletter intoText"
 							v-for="item in this.sorted"
 							:key="item.id"
 							:id="item.id"
@@ -89,6 +92,7 @@
 						>
 							{{ item.name }}
 							<audio
+								id="sortedPlay"
 								:ref="'audio' + item.id"
 								:src="item.sound"
 							></audio>
@@ -102,21 +106,12 @@
 				</div>
 			</div>
 
-			<!-- *********************************** -->
-			<!----- Clear button ----->
-			<!-- <div class="clearBtn" @click="clearDrop">
-				<a>
-					<span class="left">
-						<span class="circle-left"></span>
-						<span class="circle-right"></span>
-					</span>
-					<span class="right">
-						<span class="circle-left"></span>
-						<span class="circle-right"></span>
-					</span>
-				</a>
-			</div> -->
-			<!----- Clear button ----->
+			<!-- ///////// FIXED CONTROL BUTTONS ///////////////// -->
+			<!----- Add button ----->
+			<a class="fixedBtn btnCir add" @click="toggleSidebar">
+				<ion-icon class="add-icon" :icon="add"></ion-icon>
+			</a>
+			<!----- Store button ----->
 			<a class="fixedBtn btnCir store">
 				<ion-icon class="like-icon" :icon="thumbsUp"></ion-icon>
 			</a>
@@ -140,6 +135,63 @@
 				></ion-icon>
 			</a>
 			<!-- *********************************** -->
+
+			<!-- ///////// SIDE BAR ////////////////////// -->
+			<div v-if="this.isSidebar" class="panelWrapper">
+				<div class="sidebar">
+					<div class="headerSidebar">
+						<!-- <ion-icon class="controlSideBar" :icon="add"></ion-icon> -->
+						SYLLABLES
+						<ion-icon
+							class="controlSideBar"
+							:icon="close"
+							@click="toggleSidebar"
+						></ion-icon>
+					</div>
+					<ul class="list-group">
+						<li
+							v-for="item in this.getListSyllables"
+							:key="item.id"
+							:id="item.id"
+							@click="playSound('syll' + item.id)"
+						>
+							{{ item.name }}
+							<audio
+								:ref="'syll' + item.id"
+								:src="item.sound"
+							></audio>
+							<ion-icon
+								:icon="add"
+								@click="handleAddSyll(item)"
+							></ion-icon>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- ///////// RECORDER ////////////////////// -->
+			<div v-if="this.isRecorder" class="panelWrapper">
+				<div class="recordPanel">
+					<div class="headerRecordPanel">
+						<span>Recording...</span>
+
+						<div class="stopRecordingWrap">
+							<ion-icon
+								class="stopRecording"
+								:icon="micOff"
+								@click="handleStopRecord"
+							></ion-icon>
+							<span>00:00</span>
+						</div>
+
+						<ion-icon
+							class="closeRecorder"
+							:icon="close"
+							@click="toggleRecordPanel"
+						></ion-icon>
+					</div>
+				</div>
+			</div>
+			<!-- ///////// END ////////////////////// -->
 		</div>
 	</ion-page>
 </template>
@@ -156,9 +208,11 @@ import {
 	arrowForward,
 	search,
 	mic,
+	add,
+	micOff,
 } from "ionicons/icons";
 import { defineComponent } from "vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 // import { ref } from "vue";
 export default defineComponent({
 	name: "",
@@ -174,13 +228,18 @@ export default defineComponent({
 			sylls: [],
 			id: 0,
 			searchValue: "",
-			isText: false,
 			isSearch: false,
+			isSidebar: false,
+			isRecorder: false,
+			isTextOutput: true,
 		};
 	},
 	watch: {
 		sorted: function () {
 			this.forceRerender();
+		},
+		isTextOutput: function () {
+			this.updateSortedListOutput();
 		},
 	},
 	created() {
@@ -199,10 +258,18 @@ export default defineComponent({
 			arrowForward,
 			search,
 			mic,
+			add,
+			micOff,
 		};
 	},
 	computed: {
-		...mapGetters(["getWordByName", "getWordById", "getWordsLength"]),
+		...mapGetters([
+			// " getWordByName",
+			"getWordById",
+			"getWordsLength",
+			"getSyllableById",
+			"getListSyllables",
+		]),
 		searchedResult() {
 			let w;
 			if (this.searchValue) {
@@ -215,6 +282,7 @@ export default defineComponent({
 		},
 	},
 	methods: {
+		...mapActions(["addSyllableIntoWord"]),
 		initial() {
 			let x = this.getWordById(this.id);
 			this.word = x;
@@ -234,40 +302,20 @@ export default defineComponent({
 			this.sylls = x.sylls;
 			this.sorted = [];
 		},
-		changeOutput(e) {
-			// console.log(e.target.className);
-			this.isText = !this.isText;
-			let dragEl = document.getElementById("dropBox").children;
-			if (e.target.className != "dletter") {
-				if (this.isText) {
+		updateSortedListOutput() {
+			this.$nextTick(() => {
+				let dragEl = document.getElementById("dropBox").children;
+				if (this.isTextOutput) {
 					for (let i = 0; i < dragEl.length; i++) {
 						let c = dragEl[i];
-						c.style.margin = "7px 2px";
-						c.style.padding = "15px 6px";
-						c.style.border = "1px solid #b2b3d4";
+						c.classList.remove("intoText");
 					}
 				} else {
 					for (let i = 0; i < dragEl.length; i++) {
 						let c = dragEl[i];
-						c.style.margin = "7px 0px";
-						c.style.padding = "15px 0px";
-						c.style.border = "none";
+						c.classList.add("intoText");
 					}
 				}
-			}
-		},
-		// clearDrop() {
-		// 	if (this.getWordByName(this.searchValue)) {
-		// 		let word = this.getWordByName(this.searchValue);
-		// 		this.updateSylls(word.sylls);
-		// 		this.updateSorted([]);
-		// 	}
-		// },
-		forceRerender() {
-			this.updateEvent(false);
-			this.$nextTick(() => {
-				this.updateEvent(true);
-				this.$refs.wordAudio.load();
 			});
 		},
 		updateEvent(on) {
@@ -282,7 +330,17 @@ export default defineComponent({
 			for (let i = 0; i < dragEl.length; i++) {
 				let c = dragEl[i];
 				this.addGestureEvent(c, 2, on);
+				if (this.isTextOutput) c.classList.remove("intoText");
+				else c.classList.add("intoText");
 			}
+		},
+		onDropbox(x, y) {
+			let elem = document.querySelector("#dropBox");
+			let dropBox = elem.getBoundingClientRect();
+			if (dropBox.left >= x) return false;
+			if (dropBox.right <= x) return false;
+			if (dropBox.top >= y) return false;
+			return true;
 		},
 		addGestureEvent(c, index, on) {
 			let dropBox = document.querySelector(".dropArea");
@@ -328,12 +386,6 @@ export default defineComponent({
 			if (on) gesture.enable(true);
 			else gesture.destroy();
 		},
-		updateWord(word) {
-			this.word = word;
-			this.sylls = word.sylls;
-			this.sorted = [];
-			this.id = word.id;
-		},
 		dragAction(itemID, option) {
 			//option = 1: drag from dragBox
 			//option = 2: drag from dropBox
@@ -374,13 +426,19 @@ export default defineComponent({
 			}
 			return [item, pos];
 		},
-		onDropbox(x, y) {
-			let elem = document.querySelector("#dropBox");
-			let dropBox = elem.getBoundingClientRect();
-			if (dropBox.left >= x) return false;
-			if (dropBox.right <= x) return false;
-			if (dropBox.top >= y) return false;
-			return true;
+		updateWord(word) {
+			this.word = word;
+			this.sylls = word.sylls;
+			this.sorted = [];
+			this.id = word.id;
+		},
+		forceRerender() {
+			this.updateEvent(false);
+			this.$nextTick(() => {
+				this.updateEvent(true);
+				this.$refs.wordAudio.load();
+				// this.updateSortedListOutput();
+			});
 		},
 		playSound(index) {
 			this.$refs[index].play();
@@ -401,17 +459,44 @@ export default defineComponent({
 					return this.playSequence(sounds);
 				});
 			}
-            
 		},
 		searchReset() {
 			this.searchValue = "";
 		},
-		openSearchBox() {
-			this.isSearch = true;
+		toggleSearchBox() {
+			this.isSearch = !this.isSearch;
 		},
-		closeSearchBox() {
-			this.isSearch = false;
+		toggleSidebar() {
+			this.isSidebar = !this.isSidebar;
 		},
+		toggleRecordPanel() {
+			this.isRecorder = !this.isRecorder;
+		},
+		toggleOutput(e) {
+			if (e.target.className != "dletter") {
+				console.log(this.isTextOutput);
+				this.isTextOutput = !this.isTextOutput;
+				this.updateSortedListOutput();
+			}
+		},
+		handleAddSyll(syll) {
+			let data = {
+				wordID: this.word.id,
+				addSyll: syll,
+			};
+			this.addSyllableIntoWord(data);
+			this.isSidebar = false;
+			this.initial();
+			this.sorted = [];
+		},
+		handleStartRecord() {
+			console.log("ABC");
+			// navigator.mediaDevices.getUserMedia({
+			//     audio: true
+			// }).then(stream => audioElement.srcObject = stream)
+			//     .catch(err => log(err.name + ": " + err.message));
+		},
+		handleStopRecord() {},
 	},
 });
 </script>
