@@ -232,6 +232,7 @@ export default defineComponent({
 			isSidebar: false,
 			isRecorder: false,
 			isTextOutput: true,
+            listSounds: [],
 		};
 	},
 	watch: {
@@ -444,19 +445,19 @@ export default defineComponent({
 			this.$refs[index].play();
 		},
 		playString() {
-			let sounds = [];
+            this.listSounds=[];
 			this.sorted.forEach((item) => {
 				let audio = new Audio(item.sound);
-				sounds.push(audio);
+				this.listSounds.push(audio);
 			});
-			this.playSequence(sounds);
+			this.playSequence();
 		},
-		playSequence(sounds) {
-			if (sounds.length > 0) {
-				sounds[0].play();
-				sounds[0].addEventListener("ended", () => {
-					sounds.shift();
-					return this.playSequence(sounds);
+		playSequence() {
+			if (this.listSounds.length > 0) {
+				this.listSounds[0].play();
+				this.listSounds[0].addEventListener("ended", () => {
+					this.listSounds.shift();
+					return this.playSequence(this.listSounds);
 				});
 			}
 		},
