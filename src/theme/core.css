@@ -89,7 +89,7 @@ input:focus{
     border-bottom-right-radius: 8px;
     width: 100%;
     height: 100%;
-    background-color: #fbfbfb;
+    background-color: #e3e9ffa6;
     border: none;
     outline: none;
     box-sizing: border-box;
@@ -112,7 +112,7 @@ input:focus{
 .tab-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-around;
     min-height: calc(100vh * 0.78) ;
     /* min-height: 100vh ; */
     background-color: #fbfbfb;
@@ -174,6 +174,13 @@ input:focus{
 }
 .tab-container > .dletter:hover {
     border: 1px solid rgb(10, 5, 85);
+}
+.index{
+    position:fixed;
+    color: #9689bf;
+    font-size: 25px;
+    bottom: 10%;
+    right: 90px;
 }
 #dropBox{
     display: flex;
@@ -241,38 +248,41 @@ input:focus{
 }
 .searchOpen{
     height: 40px;
-    width: 40px;
+    width: 50px;
     text-align: center;
     border-radius: 5px;
-    background-image: linear-gradient(-180deg, rgb(247, 250, 240) 1%, #d4f5e0 100%);
+    background-image: linear-gradient( 
+        -180deg, rgb(255 255 255) 1%, #6cfbfe70 100%);
     box-shadow: 0 0px 0px 0 #fafafa, 
                 0 -1px 2px #3d3d3d inset, 
                 0 1px 1px #948eca inset, 
                 0 1px 1px 0 #b2b3d4 inset;
-    color: rgb(2, 68, 18);
+    color: rgb(0, 0, 0);
     margin: 0px 10px;
     cursor: pointer;
 }
 .searchClose{
     height: 40px;
-    width: 40px;
+    width: 50px;
     text-align: center;
     border-radius: 5px;
-    background-image: linear-gradient(-180deg, rgb(247, 250, 240) 1%, #ecc8b2 100%);
+    background-image: linear-gradient(
+        -180deg, rgb(255 255 255) 1%, #68d0ffb3 100%);
     box-shadow: 0 0px 0px 0 #fafafa, 
                 0 -1px 2px #3d3d3d inset, 
                 0 1px 1px #948eca inset, 
                 0 1px 1px 0 #b2b3d4 inset;
-    color: rgb(65, 9, 16);
+    color: rgb(255 0 32);
     margin: 0 10px;
     cursor: pointer;
 }
 .record{
     height: 40px;
-    width: 40px;
+    width: 55px;
     text-align: center;
-    border-radius: 50%;
-    background-image: linear-gradient(-180deg, rgb(247, 250, 240) 1%, #f8f5c8 100%);
+    border-radius: 20%;
+    background-image: linear-gradient(
+        -180deg, rgb(254 254 254) 1%, #feff56cc 100%);
     box-shadow: 0 0px 0px 0 #fafafa, 
                 0 -1px 2px #3d3d3d inset, 
                 0 1px 1px #948eca inset, 
@@ -287,8 +297,8 @@ input:focus{
     position: fixed;
     display: inline-block;
     text-decoration: none;
-    background-color: #eee;
-    color: rgb(173, 248, 164);
+    background-color: #fff;
+    /* color: rgb(173, 248, 164); */
     line-height: 50px;
     text-align: center;
     vertical-align: middle;
@@ -304,11 +314,11 @@ input:focus{
 }
 .btnCir{
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    -webkit-box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
-    -moz-box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
-    box-shadow: 0px 0px 20px 0px rgba(5, 78, 29, 0.7);
+    width: 45px;
+    height: 45px;
+    -webkit-box-shadow: 0px 0px 3px 0px #070150;
+    -moz-box-shadow: 0px 0px 3px 0px #070150;
+    box-shadow: 0px 0px 3px 0px #070150;
 }
 .btnRec{
     border-radius: 1%;
@@ -322,32 +332,36 @@ input:focus{
 .next{
     right: 0px;
     top: 200px;
+    height: 40px;
+    background-color: #2f3050;
 }
 .prev{
     left: 0px;
     top: 200px;
+    height: 40px;
+    background-color: #2f3050;
 }
 .dir-icon{
-    color: rgb(129, 127, 127);
-    font-size: 30px; 
+    color: #edeeff;
+    font-size: 35px;
 }
 .store{
-    right: 0px;
+    right: 5px;
     bottom: 80px;
 }
 .like-icon{
-    color: green; 
-    font-size: 30px; 
-    padding-top: 8px;
+    color: #0ba109;
+    font-size: 25px; 
+    /* padding-top: 8px; */
 }
 .add{
-    left: 0px;
+    left: 5px;
     bottom: 80px;
 }
 .add-icon{
-    color: rgb(126, 9, 14); 
-    font-size: 35px; 
-    padding-top: 8px;
+    color: #0a9dc7;
+    font-size: 37px;
+    padding-top: 4px;
 }
 /* ==== NAV BAR ==== */
 .sidebar {
@@ -387,15 +401,32 @@ input:focus{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 600px;
     font-family: ari;
     color:rgb(14, 1, 58);
 }
 .controlSideBar{
-    color: rgb(97, 98, 99);
+    color: #fff;
     font-weight: 800px;
-    font-size: 45px;
+    font-size: 40px;
+    background-color: #0a9dc7;
+}
+
+.syllSearch{
+    width: 100%;
+    line-height: 50px;
+    background-color: #9ce9ff52;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 20px;
+    padding-right: 50px;
+    padding-left: 20px;
+    color: #000;
+}
+.syllSearch + ion-icon{
+    top: -10px;
 }
 /* ///////// RECORDER ///////// */
 .panelWrapper{
@@ -421,18 +452,14 @@ input:focus{
     background-color: #f9f9fd;
     opacity: 1;
     position: absolute;
-    top: 250px;
+    /* top: 250px;
     bottom: 250px;
     left: 50px;
     right: 50px; 
-    border: solid 1px #d3cab9;
+    border: solid 1px #d3cab9; */
     z-index: 20;
     color: #000;
     border: 1px solid #eee;
-    box-shadow: 0 0px 0px 0 #fafafa, 
-                0 -1px 2px #3d3d3d inset, 
-                0 1px 1px #948eca inset, 
-                0 1px 1px 0 #b2b3d4 inset;
     top: 25%;
     bottom: 30%;
     left:5%;
@@ -447,7 +474,13 @@ input:focus{
     font-size: 20px;
     color: rgb(138, 3, 3);
 }
-.stopRecording{
+canvas {
+    margin-left: 10px;
+    width: 90%;
+    display: block;
+    margin-top: 1.5 rem;
+}
+.startRecord, .stopRecord{
     margin-top: 50px;
     margin-bottom: 20px;
     background-color: rgb(138, 3, 3);

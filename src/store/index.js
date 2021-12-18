@@ -15,22 +15,32 @@ const store = createStore({
             return JSON.parse(JSON.stringify(state.syllables));
         },
         getSyllableById: state => id => {
-            if(id==null) id=1;
+            if (id == null) id = 1;
             var syll = null;
-            for(let key in state.syllables){
+            for (let key in state.syllables) {
                 let x = JSON.parse(JSON.stringify(state.syllables[key]));
-                if(x.id == id){
-                    syll = x;                    
+                if (x.id == id) {
+                    syll = x;
                     break;
                 }
             }
             return syll;
         },
+        getSyllsByName: state => name => {
+            var sylls = [];
+            for (let key in state.syllables) {
+                let x = JSON.parse(JSON.stringify(state.syllables[key]))
+                if (x.name.toUpperCase().startsWith(name.trim().toUpperCase())) {
+                    sylls.push(x);
+                }
+            }
+            return sylls;
+        },
         getWordByName: state => name => {
             var word = null;
-            for(let key in state.words){
+            for (let key in state.words) {
                 let x = JSON.parse(JSON.stringify(state.words[key]))
-                if(x.name.toUpperCase() == name.toUpperCase()){
+                if (x.name.toUpperCase().startsWith(name.trim().toUpperCase())) {
                     word = x;
                     break;
                 }
@@ -38,12 +48,14 @@ const store = createStore({
             return word;
         },
         getWordById: state => id => {
-            if(id==null) id=1;
+            if (id == null)
+                id = 1;
+
             var word = null;
-            for(let key in state.words){
+            for (let key in state.words) {
                 let x = JSON.parse(JSON.stringify(state.words[key]));
-                if(x.id == id){
-                    word = x;                    
+                if (x.id == id) {
+                    word = x;
                     break;
                 }
             }
@@ -84,20 +96,20 @@ const store = createStore({
         //     commit('SET_LIST_WORDS', data);   
         // },
 
-        async addSyllableIntoWord({ commit, state }, data){
-            const newWords= JSON.parse(JSON.stringify([...state.words]));
+        async addSyllableIntoWord({ commit, state }, data) {
+            const newWords = JSON.parse(JSON.stringify([...state.words]));
             let exist = false;
-            for(let key in newWords[data.wordID].sylls){                
+            for (let key in newWords[data.wordID].sylls) {
                 let x = newWords[data.wordID].sylls[key];
-                if(x.id == data.addSyll.id){
-                    exist = true;                    
+                if (x.id == data.addSyll.id) {
+                    exist = true;
                     break;
                 }
             }
-            if(!exist)
+            if (!exist)
                 newWords[data.wordID].sylls.push(data.addSyll);
 
-            await commit('SET_LIST_WORDS', newWords); 
+            await commit('SET_LIST_WORDS', newWords);
         },
     }
 });

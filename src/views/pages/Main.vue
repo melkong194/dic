@@ -6,7 +6,7 @@
 					<span class="searchBar">
 						<input
 							class="searchInput"
-							placeholder="Enter a word to search"
+							placeholder="Enter recording name to search"
 							v-model="searchValue"
 						/>
 						<ion-icon @click="searchReset" :icon="close"></ion-icon>
@@ -34,12 +34,12 @@
 						class="record"
 						:icon="mic"
 						@click="
-							handleStartRecord();
+							handleRecord();
 							toggleRecordPanel();
 						"
 					></ion-icon>
 				</div>
-				<div v-if="this.searchedResult"></div>
+				<div v-if="this.searchedWordResult"></div>
 				<div id="contentWrapper">
 					<!-- ******** SEARCH BAR ******** -->
 					<!-- <ion-searchbar
@@ -59,7 +59,7 @@
                     <p>WORD: {{ this.word }}</p>
                     <p>Length: {{this.getWordsLength}}, id: {{this.id}}</p> -->
 
-					<!-- <div class="tab-container" id="dragBox" v-if="this.searchedResult"> -->
+					<!-- <div class="tab-container" id="dragBox" v-if="this.searchedWordResult"> -->
 					<div class="tab-container" id="dragBox">
 						<div
 							class="dletter"
@@ -109,7 +109,7 @@
 			<!-- ///////// FIXED CONTROL BUTTONS ///////////////// -->
 			<!----- Add button ----->
 			<a class="fixedBtn btnCir add" @click="toggleSidebar">
-				<ion-icon class="add-icon" :icon="add"></ion-icon>
+				<ion-icon class="add-icon" :icon="addSharp"></ion-icon>
 			</a>
 			<!----- Store button ----->
 			<a class="fixedBtn btnCir store">
@@ -134,6 +134,10 @@
 					:icon="arrowBack"
 				></ion-icon>
 			</a>
+			<!----- index recording ----->
+			<span class="index"
+				>{{ this.id + 1 }}/{{ this.getWordsLength }}</span
+			>
 			<!-- *********************************** -->
 
 			<!-- ///////// SIDE BAR ////////////////////// -->
@@ -141,6 +145,18 @@
 				<div class="sidebar">
 					<div class="headerSidebar">
 						<!-- <ion-icon class="controlSideBar" :icon="add"></ion-icon> -->
+						<ion-icon
+							v-if="!this.isSyllSearch"
+							class="controlSideBar"
+							:icon="search"
+							@click="toggleSyllSearch"
+						></ion-icon>
+						<ion-icon
+							v-if="this.isSyllSearch"
+							class="controlSideBar"
+							:icon="closeCircleSharp"
+							@click="toggleSyllSearch"
+						></ion-icon>
 						SYLLABLES
 						<ion-icon
 							class="controlSideBar"
@@ -148,9 +164,39 @@
 							@click="toggleSidebar"
 						></ion-icon>
 					</div>
-					<ul class="list-group">
+
+					<span class="searchBar" v-if="this.isSyllSearch">
+						<input
+							class="syllSearch"
+							placeholder="Enter syllable to search"
+							v-model="syllValue"
+						/>
+						<ion-icon @click="searchReset" :icon="close"></ion-icon>
+					</span>
+
+					<ul class="list-group" v-if="this.syllValue == ''">
 						<li
 							v-for="item in this.getListSyllables"
+							:key="item.id"
+							:id="item.id"
+							@click="playSound('syll' + item.id)"
+						>
+							{{ item.name }}
+							<audio
+								:ref="'syll' + item.id"
+								:src="item.sound"
+							></audio>
+							<ion-icon
+								:icon="add"
+								@click="handleAddSyll(item)"
+							></ion-icon>
+						</li>
+					</ul>
+
+					<ul class="list-group" v-if="this.syllValue != ''">
+						<!-- <span>{{this.syllValue}}</span> -->
+						<li
+							v-for="item in this.searchedSyllResult"
 							:key="item.id"
 							:id="item.id"
 							@click="playSound('syll' + item.id)"
@@ -171,16 +217,21 @@
 			<!-- ///////// RECORDER ////////////////////// -->
 			<div v-if="this.isRecorder" class="panelWrapper">
 				<div class="recordPanel">
-					<div class="headerRecordPanel">
+					<div class="headerRecordPanel" id="buttons">
 						<span>Recording...</span>
 
 						<div class="stopRecordingWrap">
+							<!-- <ion-icon
+								class="startRecord"
+								:icon="mic"
+								@click="toggleRecording"
+							></ion-icon> -->
 							<ion-icon
-								class="stopRecording"
+								class="stopRecord"
 								:icon="micOff"
-								@click="handleStopRecord"
+								@click="toggleRecording"
 							></ion-icon>
-							<span>00:00</span>
+							<!-- <span>00:00</span> -->
 						</div>
 
 						<ion-icon
@@ -189,6 +240,8 @@
 							@click="toggleRecordPanel"
 						></ion-icon>
 					</div>
+					<!-- <canvas class="visualizer" height="60"></canvas> -->
+					<section class="sound-clips"></section>
 				</div>
 			</div>
 			<!-- ///////// END ////////////////////// -->
@@ -199,6 +252,7 @@
 <script>
 import { createGesture } from "@ionic/vue";
 import { IonContent, IonPage, IonIcon } from "@ionic/vue";
+
 import {
 	play,
 	repeat,
@@ -209,13 +263,15 @@ import {
 	search,
 	mic,
 	add,
+	addSharp,
 	micOff,
+	closeCircleSharp,
 } from "ionicons/icons";
 import { defineComponent } from "vue";
 import { mapGetters, mapActions } from "vuex";
 // import { ref } from "vue";
 export default defineComponent({
-	name: "",
+	name: "AudioRecorder",
 	components: {
 		IonContent,
 		IonPage,
@@ -228,11 +284,14 @@ export default defineComponent({
 			sylls: [],
 			id: 0,
 			searchValue: "",
+			syllValue: "",
 			isSearch: false,
+			isSyllSearch: false,
 			isSidebar: false,
 			isRecorder: false,
 			isTextOutput: true,
-            listSounds: [],
+			listSounds: [],
+			isRecording: false,
 		};
 	},
 	watch: {
@@ -259,19 +318,22 @@ export default defineComponent({
 			arrowForward,
 			search,
 			mic,
+			addSharp,
 			add,
 			micOff,
+			closeCircleSharp,
 		};
 	},
 	computed: {
 		...mapGetters([
-			// " getWordByName",
+			"getWordByName",
 			"getWordById",
 			"getWordsLength",
 			"getSyllableById",
 			"getListSyllables",
+			"getSyllsByName",
 		]),
-		searchedResult() {
+		searchedWordResult() {
 			let w;
 			if (this.searchValue) {
 				if (this.getWordByName(this.searchValue)) {
@@ -281,6 +343,13 @@ export default defineComponent({
 			}
 			return w;
 		},
+		searchedSyllResult() {
+			let s = [];
+			if (this.syllValue) {
+				s = this.getSyllsByName(this.syllValue);
+			}
+			return s;
+		},
 	},
 	methods: {
 		...mapActions(["addSyllableIntoWord"]),
@@ -288,12 +357,18 @@ export default defineComponent({
 			let x = this.getWordById(this.id);
 			this.word = x;
 			this.sylls = x.sylls;
+			this.addStopSyll();
+		},
+		addStopSyll() {
+			let stop = { id: -1, name: "___", sound: "/assets/stop.wav" };
+			this.sylls.unshift(stop);
 		},
 		nextWord() {
 			this.id = this.id + 1;
 			let x = this.getWordById(this.id);
 			this.word = x;
 			this.sylls = x.sylls;
+			this.addStopSyll();
 			this.sorted = [];
 		},
 		prevWord() {
@@ -301,6 +376,7 @@ export default defineComponent({
 			let x = this.getWordById(this.id);
 			this.word = x;
 			this.sylls = x.sylls;
+			this.addStopSyll();
 			this.sorted = [];
 		},
 		updateSortedListOutput() {
@@ -373,12 +449,12 @@ export default defineComponent({
 					let a = c.getAttribute("id");
 					if (index == 1) {
 						if (this.onDropbox(e.currentX, e.currentY)) {
-							c.remove();
+							// c.remove();
 							this.dragAction(a, index);
 						}
 					} else {
 						if (!this.onDropbox(e.currentX, e.currentY)) {
-							c.remove();
+							// c.remove();
 							this.dragAction(a, index);
 						}
 					}
@@ -397,8 +473,10 @@ export default defineComponent({
 				let result = this.FindItemPosition(x, itemID);
 
 				//update sylls list
-				x.splice(result[1], 1);
-				this.sylls = x;
+				if (itemID > -1) {
+					x.splice(result[1], 1);
+					this.sylls = x;
+				}
 
 				//update sorted list
 				y.push(result[0]);
@@ -407,12 +485,15 @@ export default defineComponent({
 				let result = this.FindItemPosition(y, itemID);
 
 				//update sylls list
+
 				y.splice(result[1], 1);
 				this.sorted = y;
 
 				//update sorted list
-				x.push(result[0]);
-				this.sylls = x;
+				if (itemID > -1) {
+					x.push(result[0]);
+					this.sylls = x;
+				}
 			}
 		},
 		FindItemPosition(list, id) {
@@ -430,6 +511,7 @@ export default defineComponent({
 		updateWord(word) {
 			this.word = word;
 			this.sylls = word.sylls;
+			this.addStopSyll();
 			this.sorted = [];
 			this.id = word.id;
 		},
@@ -445,7 +527,7 @@ export default defineComponent({
 			this.$refs[index].play();
 		},
 		playString() {
-            this.listSounds=[];
+			this.listSounds = [];
 			this.sorted.forEach((item) => {
 				let audio = new Audio(item.sound);
 				this.listSounds.push(audio);
@@ -463,12 +545,17 @@ export default defineComponent({
 		},
 		searchReset() {
 			this.searchValue = "";
+			this.syllValue = "";
 		},
 		toggleSearchBox() {
 			this.isSearch = !this.isSearch;
 		},
 		toggleSidebar() {
 			this.isSidebar = !this.isSidebar;
+		},
+		toggleSyllSearch() {
+			this.searchReset();
+			this.isSyllSearch = !this.isSyllSearch;
 		},
 		toggleRecordPanel() {
 			this.isRecorder = !this.isRecorder;
@@ -480,6 +567,9 @@ export default defineComponent({
 				this.updateSortedListOutput();
 			}
 		},
+		toggleRecording() {
+			this.isRecording = !this.isRecording;
+		},
 		handleAddSyll(syll) {
 			let data = {
 				wordID: this.word.id,
@@ -490,14 +580,168 @@ export default defineComponent({
 			this.initial();
 			this.sorted = [];
 		},
-		handleStartRecord() {
-			console.log("ABC");
-			// navigator.mediaDevices.getUserMedia({
-			//     audio: true
-			// }).then(stream => audioElement.srcObject = stream)
-			//     .catch(err => log(err.name + ": " + err.message));
+		handleRecord() {
+			// const record = document.querySelector('.startRecord');
+
+			if (navigator.mediaDevices.getUserMedia) {
+				console.log("getUserMedia supported.");
+
+				const constraints = { audio: true };
+				let chunks = [];
+
+				let onSuccess = (stream) => {
+					const mediaRecorder = new MediaRecorder(stream);
+					// this.visualize(stream);
+					mediaRecorder.start();
+
+					const stop = document.querySelector(".stopRecord");
+					stop.onclick = () => {
+						mediaRecorder.stop();
+						mediaRecorder.onstop = () => {
+							console.log(
+								"data available after MediaRecorder.stop() called."
+							);
+
+							// const clipName = 'abc';
+							const clipContainer =
+								document.createElement("article");
+							const clipLabel = document.createElement("p");
+							const audio = document.createElement("audio");
+							const deleteButton =
+								document.createElement("button");
+							const soundClips =
+								document.querySelector(".sound-clips");
+
+							clipContainer.classList.add("clip");
+							audio.setAttribute("controls", "");
+							// clipLabel.textContent = clipName;
+
+							clipContainer.appendChild(audio);
+							clipContainer.appendChild(clipLabel);
+							clipContainer.appendChild(deleteButton);
+							soundClips.appendChild(clipContainer);
+
+							audio.controls = true;
+							const blob = new Blob(chunks, {
+								type: "audio/wav; codecs=opus",
+							});
+							// this.saveFile(blob);
+							var filename = "abc..wav";
+							if (window.navigator.msSaveOrOpenBlob)
+								// IE10+
+								window.navigator.msSaveOrOpenBlob(
+									blob,
+									filename
+								);
+							else {
+								// Others
+								var aTag = document.createElement("a"),
+									url = URL.createObjectURL(blob);
+								aTag.href = url;
+								aTag.download = filename;
+								document.body.appendChild(aTag);
+								console.log(aTag);
+
+								aTag.addEventListener("click", (event) => {
+									event.preventDefault();
+									console.log(aTag);
+									console.log(event);
+								});
+
+								// setTimeout(function() {
+								//     document.body.removeChild(aTag);
+								//     window.URL.revokeObjectURL(url);
+								// }, 0);
+							}
+
+							chunks = [];
+							const audioURL = window.URL.createObjectURL(blob);
+							audio.src = audioURL;
+							console.log("recorder stopped");
+						};
+
+						mediaRecorder.ondataavailable = function (e) {
+							chunks.push(e.data);
+						};
+					};
+				};
+
+				let onError = function (err) {
+					console.log("The following error occured: " + err);
+				};
+
+				navigator.mediaDevices
+					.getUserMedia(constraints)
+					.then(onSuccess, onError);
+			} else {
+				console.log("getUserMedia not supported on your browser!");
+			}
 		},
-		handleStopRecord() {},
+		// saveFile(blob) {
+		//     console.log("start");
+		// 	var a = document.createElement("a");
+		// 	document.body.appendChild(a);
+		// 	a.style = "display: none";
+		//     const url = window.URL.createObjectURL(blob);
+		// 	a.href = url;
+		// 	a.click();
+		// 	window.URL.revokeObjectURL(url);
+		//     console.log("end");
+		// },
+		// visualize(stream) {
+		// 	let audioCtx;
+		// 	const canvas = document.querySelector(".visualizer");
+		// 	const canvasCtx = canvas.getContext("2d");
+
+		// 	if (!audioCtx) {
+		// 		audioCtx = new AudioContext();
+		// 	}
+
+		// 	const source = audioCtx.createMediaStreamSource(stream);
+
+		// 	const analyser = audioCtx.createAnalyser();
+		// 	analyser.fftSize = 2048;
+		// 	const bufferLength = analyser.frequencyBinCount;
+		// 	const dataArray = new Uint8Array(bufferLength);
+
+		// 	source.connect(analyser);
+		// 	this.draw(canvas, canvasCtx, analyser, dataArray, bufferLength);
+		// },
+		// draw(canvas, canvasCtx, analyser, dataArray, bufferLength) {
+		// 	const WIDTH = canvas.width;
+		// 	const HEIGHT = canvas.height;
+
+		// 	requestAnimationFrame(this.draw);
+
+		// 	analyser.getByteTimeDomainData(dataArray);
+
+		// 	canvasCtx.fillStyle = "rgb(200, 200, 200)";
+		// 	canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+		// 	canvasCtx.lineWidth = 2;
+		// 	canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+
+		// 	canvasCtx.beginPath();
+
+		// 	let sliceWidth = (WIDTH * 1.0) / bufferLength;
+		// 	let x = 0;
+
+		// 	for (let i = 0; i < bufferLength; i++) {
+		// 		let v = dataArray[i] / 128.0;
+		// 		let y = (v * HEIGHT) / 2;
+
+		// 		if (i === 0) {
+		// 			canvasCtx.moveTo(x, y);
+		// 		} else {
+		// 			canvasCtx.lineTo(x, y);
+		// 		}
+
+		// 		x += sliceWidth;
+		// 	}
+
+		// 	canvasCtx.lineTo(canvas.width, canvas.height / 2);
+		// 	canvasCtx.stroke();
+		// },
 	},
 });
 </script>
