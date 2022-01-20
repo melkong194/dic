@@ -12,24 +12,24 @@ const routes = [
     name: 'Main',
     component: () => import('../views/pages/Main.vue')
   },
-  {
-    path: '/abc',
-    name: 'ABC',
-    component: () => import('../views/pages/ABC.vue')
-  },
-  {
-    path: '/letters',
-    name: 'Home',
-    component: () => import('../views/pages/Home.vue')
-  },
-  {
-    path: '/translate',
-    component: () => import('../views/pages/Translation.vue')
-  },
-  {
-    path: '/words',
-    component: () => import('../views/pages/Words.vue')
-  }
+//   {
+//     path: '/abc',
+//     name: 'ABC',
+//     component: () => import('../views/pages/ABC.vue')
+//   },
+//   {
+//     path: '/letters',
+//     name: 'Home',
+//     component: () => import('../views/pages/Home.vue')
+//   },
+//   {
+//     path: '/translate',
+//     component: () => import('../views/pages/Translation.vue')
+//   },
+//   {
+//     path: '/words',
+//     component: () => import('../views/pages/Words.vue')
+//   }
 ]
 
 const router = createRouter({

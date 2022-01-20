@@ -657,7 +657,7 @@ ion-searchbar{
         right: 30%;
     }
     
-    .tab-container {
+    .tab-container > .dletter{
         margin: 20px;
     }
 }
