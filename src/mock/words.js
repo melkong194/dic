@@ -2,24 +2,10 @@ let words = [
     {
         id: 0,
         name: "a",                      // a word
-        sound: "/assets/words/a.mp3",     // sound of word
+        sound: "/assets/words/kun2.wav",     // sound of word
         done: false,                        // sorted or not
         store: [],                          // will catch sorted sylls
         sylls: [                            // store raw syllables
-            { id: 0, name: "be", sound: "/assets/sylls/be.wav" },
-            { id: 1, name: "bey", sound: "/assets/sylls/bey.wav" },
-            { id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
-            { id: 3, name: "kka", sound: "/assets/sylls/kka.wav" },
-            { id: 4, name: "kan", sound: "/assets/sylls/kan.wav" }
-        ]
-    },
-    {
-        id: 1,
-        name: "alibaba",
-        sound: "/assets/words/bey.mp3",
-        done: false,
-        store: [],
-        sylls: [
             { id: 0, name: "be", sound: "/assets/sylls/be.wav" },
             { id: 1, name: "bey", sound: "/assets/sylls/bey.wav" },
             { id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
@@ -33,12 +19,26 @@ let words = [
             { id: 10, name: "be", sound: "/assets/sylls/be.wav" },
             { id: 11, name: "bey", sound: "/assets/sylls/bey.wav" },
         ]
+    },
+    {
+        id: 1,
+        name: "alibaba",
+        sound: "/assets/words/kun.wav",
+        done: false,
+        store: [],
+        sylls: [
+            { id: 0, name: "be", sound: "/assets/sylls/be.wav" },
+            { id: 1, name: "bey", sound: "/assets/sylls/bey.wav" },
+            { id: 2, name: "ka", sound: "/assets/sylls/ka.wav" },
+            { id: 3, name: "kka", sound: "/assets/sylls/kka.wav" },
+            { id: 4, name: "kan", sound: "/assets/sylls/kan.wav" }
+        ]
 
     },
     {
         id: 2,
         name: "Banhmi",
-        sound: "/assets/words/bed.mp3",
+        sound: "/assets/words/kun2.wav",
         done: false,
         store: [],
         sylls: [
@@ -53,7 +53,7 @@ let words = [
     {
         id: 3,
         name: "pho",
-        sound: "/assets/words/beng.mp3",
+        sound: "/assets/words/kun.wav",
         done: false,
         store: [],
         sylls: [
@@ -106,7 +106,7 @@ let words = [
     {
         id: 4,
         name: "b",
-        sound: "/assets/words/beng.mp3",
+        sound: "/assets/words/kun2.wav",
         done: false,
         store: [],
         sylls: [

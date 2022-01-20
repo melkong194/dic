@@ -85,9 +85,10 @@
 					<div id="dropBox" @click="this.toggleOutput($event)">
 						<div
 							class="dletter intoText"
-							v-for="item in this.sorted"
+							v-for="(item, index) in this.sorted"
 							:key="item.id"
 							:id="item.id"
+                            :index="index"
 							@click="playSound('audio' + item.id)"
 						>
 							{{ item.name }}
@@ -112,7 +113,7 @@
 				<ion-icon class="add-icon" :icon="addSharp"></ion-icon>
 			</a>
 			<!----- Store button ----->
-			<a class="fixedBtn btnCir store">
+			<a class="fixedBtn btnCir store" @click="storeWord">
 				<ion-icon class="like-icon" :icon="thumbsUp"></ion-icon>
 			</a>
 			<!----- next button ----->
@@ -395,18 +396,18 @@ export default defineComponent({
 				}
 			});
 		},
-		updateEvent(on) {
+		updateEvent() {
 			// index=1 : drag in , index=2 : drag out
 			let dragEl = document.getElementById("dragBox").children;
 			for (let i = 0; i < dragEl.length; i++) {
 				let c = dragEl[i];
-				this.addGestureEvent(c, 1, on);
+				this.addGestureEvent(c, 1);
 			}
 
 			dragEl = document.getElementById("dropBox").children;
 			for (let i = 0; i < dragEl.length; i++) {
 				let c = dragEl[i];
-				this.addGestureEvent(c, 2, on);
+				this.addGestureEvent(c, 2);
 				if (this.isTextOutput) c.classList.remove("intoText");
 				else c.classList.add("intoText");
 			}
@@ -419,7 +420,9 @@ export default defineComponent({
 			if (dropBox.top >= y) return false;
 			return true;
 		},
-		addGestureEvent(c, index, on) {
+		addGestureEvent(c, index) {
+            //index = 1: drag from dragBox
+			//index = 2: drag from dropBox
 			let dropBox = document.querySelector(".dropArea");
 			let contentEl = document.querySelector("#icontent");
 			const gesture = createGesture({
@@ -446,22 +449,22 @@ export default defineComponent({
 					contentEl.setAttribute("scroll-y", true);
 					dropBox.style.border = "5px dashed rgb(23, 90, 129)";
 					c.style.transform = `translate(0px, 0px)`;
-					let a = c.getAttribute("id");
-					if (index == 1) {
+					if (index == 1) {                        
 						if (this.onDropbox(e.currentX, e.currentY)) {
-							// c.remove();
+							let a = c.getAttribute("id");
 							this.dragAction(a, index);
 						}
-					} else {
+					} else {                        
 						if (!this.onDropbox(e.currentX, e.currentY)) {
-							// c.remove();
+							let a = c.getAttribute("index");
 							this.dragAction(a, index);
 						}
 					}
 				},
 			});
-			if (on) gesture.enable(true);
-			else gesture.destroy();
+			// if (on) 
+            gesture.enable(true);
+			// else gesture.destroy();
 		},
 		dragAction(itemID, option) {
 			//option = 1: drag from dragBox
@@ -473,39 +476,34 @@ export default defineComponent({
 				let result = this.FindItemPosition(x, itemID);
 
 				//update sylls list
-				if (itemID > -1) {
-					x.splice(result[1], 1);
-					this.sylls = x;
-				}
+				// if (itemID > -1) {
+				// 	x.splice(result[1], 1);
+				// 	this.sylls = x;
+				// }
 
 				//update sorted list
 				y.push(result[0]);
 				this.sorted = y;
 			} else {
-				let result = this.FindItemPosition(y, itemID);
-
-				//update sylls list
-
-				y.splice(result[1], 1);
+				y.splice(itemID, 1);
 				this.sorted = y;
-
 				//update sorted list
-				if (itemID > -1) {
-					x.push(result[0]);
-					this.sylls = x;
-				}
+				// if (itemID > -1) {
+				// 	x.push(result[0]);
+				// 	this.sylls = x;
+				// }
 			}
 		},
 		FindItemPosition(list, id) {
 			let item = null;
 			let pos = null;
-			for (let x = 0; x < list.length; x++) {
-				if (list[x].id == id) {
-					item = list[x];
-					pos = x;
-					break;
-				}
-			}
+            for (let x = 0; x < list.length; x++) {
+                if (list[x].id == id) {
+                    item = list[x];
+                    pos = x;
+                    break;
+                }
+            }
 			return [item, pos];
 		},
 		updateWord(word) {
@@ -561,8 +559,8 @@ export default defineComponent({
 			this.isRecorder = !this.isRecorder;
 		},
 		toggleOutput(e) {
-			if (e.target.className != "dletter") {
-				console.log(this.isTextOutput);
+			if (!e.target.classList.contains("dletter")){
+				// console.log(this.isTextOutput);
 				this.isTextOutput = !this.isTextOutput;
 				this.updateSortedListOutput();
 			}
@@ -742,6 +740,9 @@ export default defineComponent({
 		// 	canvasCtx.lineTo(canvas.width, canvas.height / 2);
 		// 	canvasCtx.stroke();
 		// },
+        storeWord(){
+            
+        }
 	},
 });
 </script>

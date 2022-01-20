@@ -656,6 +656,10 @@ ion-searchbar{
         left:30%;
         right: 30%;
     }
+    
+    .tab-container {
+        margin: 20px;
+    }
 }
 
 
