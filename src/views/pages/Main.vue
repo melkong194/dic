@@ -14,11 +14,17 @@
 				</div>
 
 				<div class="searchedWord">
-					<ion-icon
+					<!-- <ion-icon
 						v-if="!this.isSearch"
 						@click="toggleSearchBox"
 						class="searchOpen"
 						:icon="search"
+					></ion-icon> -->
+					<ion-icon
+						v-if="!this.isSearch"
+						@click="toggleSidebar"
+						class="searchOpen"
+						:icon="addSharp"
 					></ion-icon>
 					<ion-icon
 						v-if="this.isSearch"
@@ -33,10 +39,7 @@
 					<ion-icon
 						class="record"
 						:icon="mic"
-						@click="
-							handleRecord();
-							toggleRecordPanel();
-						"
+						@click="toggleRecordPanel()"
 					></ion-icon>
 				</div>
 				<div v-if="this.searchedWordResult"></div>
@@ -60,7 +63,8 @@
                     <p>Length: {{this.getWordsLength}}, id: {{this.id}}</p> -->
 
 					<!-- <div class="tab-container" id="dragBox" v-if="this.searchedWordResult"> -->
-					<div class="tab-container" id="dragBox">
+					<p>Testing add syll from recording: {{ this.newSylls }}</p>
+                    <div class="tab-container" id="dragBox">
 						<div
 							class="dletter"
 							v-for="item in this.sylls"
@@ -88,7 +92,7 @@
 							v-for="(item, index) in this.sorted"
 							:key="item.id"
 							:id="item.id"
-                            :index="index"
+							:index="index"
 							@click="playSound('audio' + item.id)"
 						>
 							{{ item.name }}
@@ -109,9 +113,9 @@
 
 			<!-- ///////// FIXED CONTROL BUTTONS ///////////////// -->
 			<!----- Add button ----->
-			<a class="fixedBtn btnCir add" @click="toggleSidebar">
+			<!-- <a class="fixedBtn btnCir add" @click="toggleSidebar">
 				<ion-icon class="add-icon" :icon="addSharp"></ion-icon>
-			</a>
+			</a> -->
 			<!----- Store button ----->
 			<a class="fixedBtn btnCir store" @click="storeWord">
 				<ion-icon class="like-icon" :icon="thumbsUp"></ion-icon>
@@ -219,21 +223,13 @@
 			<div v-if="this.isRecorder" class="panelWrapper">
 				<div class="recordPanel">
 					<div class="headerRecordPanel" id="buttons">
-						<span>Recording...</span>
-
-						<div class="stopRecordingWrap">
-							<!-- <ion-icon
-								class="startRecord"
-								:icon="mic"
-								@click="toggleRecording"
-							></ion-icon> -->
-							<ion-icon
-								class="stopRecord"
-								:icon="micOff"
-								@click="toggleRecording"
-							></ion-icon>
-							<!-- <span>00:00</span> -->
-						</div>
+						<span v-if="this.isRecording == 1"
+							>Click on mic to record !</span
+						>
+						<span v-if="this.isRecording == 2"
+							>Recording..., click on mic to stop !</span
+						>
+						<span v-if="this.isRecording == 3">Recorded !</span>
 
 						<ion-icon
 							class="closeRecorder"
@@ -241,8 +237,39 @@
 							@click="toggleRecordPanel"
 						></ion-icon>
 					</div>
-					<!-- <canvas class="visualizer" height="60"></canvas> -->
-					<section class="sound-clips"></section>
+					<section
+						class="sound-clips"
+						v-if="this.isRecording == 3"
+					></section>
+					<section v-if="this.isRecording != 3">
+						<canvas class="visualizer" height="60"></canvas>
+					</section>
+					<div class="stopRecordingWrap">
+						<ion-icon
+							v-if="this.isRecording == 1"
+							class="startRecord"
+							:icon="mic"
+							@click="
+								toggleRecording();
+								handleRecord();
+							"
+						></ion-icon>
+
+						<ion-icon
+							v-if="this.isRecording == 2"
+							class="stopRecord"
+							:icon="micOff"
+							@click="toggleRecording"
+						></ion-icon>
+						<!-- <span>00:00</span> -->
+						<!-- <div
+							class="recordedControls"
+							v-if="this.isRecording == 3"
+						>
+							<button>Re-record</button>
+							<button>Accept Record</button>
+						</div> -->
+					</div>
 				</div>
 			</div>
 			<!-- ///////// END ////////////////////// -->
@@ -253,7 +280,8 @@
 <script>
 import { createGesture } from "@ionic/vue";
 import { IonContent, IonPage, IonIcon } from "@ionic/vue";
-
+// import { axiosInstance } from "../../config/axios";
+import axios from "axios";
 import {
 	play,
 	repeat,
@@ -270,6 +298,7 @@ import {
 } from "ionicons/icons";
 import { defineComponent } from "vue";
 import { mapGetters, mapActions } from "vuex";
+
 // import { ref } from "vue";
 export default defineComponent({
 	name: "AudioRecorder",
@@ -292,7 +321,9 @@ export default defineComponent({
 			isRecorder: false,
 			isTextOutput: true,
 			listSounds: [],
-			isRecording: false,
+			isRecording: 1,
+            newSylls: null,
+
 		};
 	},
 	watch: {
@@ -421,7 +452,7 @@ export default defineComponent({
 			return true;
 		},
 		addGestureEvent(c, index) {
-            //index = 1: drag from dragBox
+			//index = 1: drag from dragBox
 			//index = 2: drag from dropBox
 			let dropBox = document.querySelector(".dropArea");
 			let contentEl = document.querySelector("#icontent");
@@ -449,12 +480,12 @@ export default defineComponent({
 					contentEl.setAttribute("scroll-y", true);
 					dropBox.style.border = "5px dashed rgb(23, 90, 129)";
 					c.style.transform = `translate(0px, 0px)`;
-					if (index == 1) {                        
+					if (index == 1) {
 						if (this.onDropbox(e.currentX, e.currentY)) {
 							let a = c.getAttribute("id");
 							this.dragAction(a, index);
 						}
-					} else {                        
+					} else {
 						if (!this.onDropbox(e.currentX, e.currentY)) {
 							let a = c.getAttribute("index");
 							this.dragAction(a, index);
@@ -462,8 +493,8 @@ export default defineComponent({
 					}
 				},
 			});
-			// if (on) 
-            gesture.enable(true);
+			// if (on)
+			gesture.enable(true);
 			// else gesture.destroy();
 		},
 		dragAction(itemID, option) {
@@ -497,13 +528,13 @@ export default defineComponent({
 		FindItemPosition(list, id) {
 			let item = null;
 			let pos = null;
-            for (let x = 0; x < list.length; x++) {
-                if (list[x].id == id) {
-                    item = list[x];
-                    pos = x;
-                    break;
-                }
-            }
+			for (let x = 0; x < list.length; x++) {
+				if (list[x].id == id) {
+					item = list[x];
+					pos = x;
+					break;
+				}
+			}
 			return [item, pos];
 		},
 		updateWord(word) {
@@ -557,16 +588,20 @@ export default defineComponent({
 		},
 		toggleRecordPanel() {
 			this.isRecorder = !this.isRecorder;
+			this.isRecording = 1;
 		},
 		toggleOutput(e) {
-			if (!e.target.classList.contains("dletter")){
+			if (!e.target.classList.contains("dletter")) {
 				// console.log(this.isTextOutput);
 				this.isTextOutput = !this.isTextOutput;
 				this.updateSortedListOutput();
 			}
 		},
 		toggleRecording() {
-			this.isRecording = !this.isRecording;
+			if (this.isRecording == 3) this.isRecording = 1;
+			else {
+				this.isRecording = this.isRecording + 1;
+			}
 		},
 		handleAddSyll(syll) {
 			let data = {
@@ -576,10 +611,15 @@ export default defineComponent({
 			this.addSyllableIntoWord(data);
 			this.isSidebar = false;
 			this.initial();
-			this.sorted = [];
+			// this.sorted = [];
 		},
 		handleRecord() {
 			// const record = document.querySelector('.startRecord');
+			const canvas = document.querySelector(".visualizer");
+			let audioCtx;
+			const canvasCtx = canvas.getContext("2d");
+			let self = this;
+			// const mainSection = document.querySelector(".main-controls");
 
 			if (navigator.mediaDevices.getUserMedia) {
 				console.log("getUserMedia supported.");
@@ -589,7 +629,9 @@ export default defineComponent({
 
 				let onSuccess = (stream) => {
 					const mediaRecorder = new MediaRecorder(stream);
-					// this.visualize(stream);
+
+					visualize(stream);
+
 					mediaRecorder.start();
 
 					const stop = document.querySelector(".stopRecord");
@@ -603,9 +645,11 @@ export default defineComponent({
 							// const clipName = 'abc';
 							const clipContainer =
 								document.createElement("article");
-							const clipLabel = document.createElement("p");
+							// const clipLabel = document.createElement("p");
 							const audio = document.createElement("audio");
-							const deleteButton =
+							const recordButton =
+								document.createElement("button");
+							const acceptButton =
 								document.createElement("button");
 							const soundClips =
 								document.querySelector(".sound-clips");
@@ -615,16 +659,20 @@ export default defineComponent({
 							// clipLabel.textContent = clipName;
 
 							clipContainer.appendChild(audio);
-							clipContainer.appendChild(clipLabel);
-							clipContainer.appendChild(deleteButton);
+							clipContainer.appendChild(recordButton);
+							clipContainer.appendChild(acceptButton);
 							soundClips.appendChild(clipContainer);
+							recordButton.textContent = "Re-record";
+							recordButton.className = "reRecord";
+							acceptButton.textContent = "Accept";
+							acceptButton.className = "accept";
 
 							audio.controls = true;
 							const blob = new Blob(chunks, {
 								type: "audio/wav; codecs=opus",
 							});
 							// this.saveFile(blob);
-							var filename = "abc..wav";
+							var filename = "abc.wav";
 							if (window.navigator.msSaveOrOpenBlob)
 								// IE10+
 								window.navigator.msSaveOrOpenBlob(
@@ -645,17 +693,22 @@ export default defineComponent({
 									console.log(aTag);
 									console.log(event);
 								});
-
-								// setTimeout(function() {
-								//     document.body.removeChild(aTag);
-								//     window.URL.revokeObjectURL(url);
-								// }, 0);
 							}
 
 							chunks = [];
 							const audioURL = window.URL.createObjectURL(blob);
 							audio.src = audioURL;
 							console.log("recorder stopped");
+							recordButton.onclick = function () {
+								self.isRecording = 1;
+								return;
+							};
+							acceptButton.onclick = function () {
+								// Code Python here
+                                self.loadingRecordingSylls();
+								self.toggleRecordPanel();
+								return;
+							};
 						};
 
 						mediaRecorder.ondataavailable = function (e) {
@@ -665,84 +718,94 @@ export default defineComponent({
 				};
 
 				let onError = function (err) {
-					console.log("The following error occured: " + err);
+					self.isRecorder = false;
+					self.isRecording = 1;
+					alert(
+						err + ". Please allow apps to access your microphone"
+					);
 				};
 
 				navigator.mediaDevices
 					.getUserMedia(constraints)
 					.then(onSuccess, onError);
 			} else {
-				console.log("getUserMedia not supported on your browser!");
+				alert("Browser is not supported the recording function!");
 			}
+
+			function visualize(stream) {
+				if (!audioCtx) {
+					audioCtx = new AudioContext();
+				}
+
+				const source = audioCtx.createMediaStreamSource(stream);
+
+				const analyser = audioCtx.createAnalyser();
+				analyser.fftSize = 2048;
+				const bufferLength = analyser.frequencyBinCount;
+				const dataArray = new Uint8Array(bufferLength);
+
+				source.connect(analyser);
+				//analyser.connect(audioCtx.destination);
+
+				draw();
+
+				function draw() {
+					const WIDTH = canvas.width;
+					const HEIGHT = canvas.height;
+					requestAnimationFrame(draw);
+					analyser.getByteTimeDomainData(dataArray);
+					canvasCtx.fillStyle = "rgb(225, 222, 250)";
+					canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+					canvasCtx.lineWidth = 2;
+					canvasCtx.strokeStyle = "rgb(24, 16, 97)";
+					canvasCtx.beginPath();
+					let sliceWidth = (WIDTH * 1.0) / bufferLength;
+					let x = 0;
+
+					for (let i = 0; i < bufferLength; i++) {
+						let v = dataArray[i] / 128.0;
+						let y = (v * HEIGHT) / 2;
+
+						if (i === 0) {
+							canvasCtx.moveTo(x, y);
+						} else {
+							canvasCtx.lineTo(x, y);
+						}
+
+						x += sliceWidth;
+					}
+
+					canvasCtx.lineTo(canvas.width, canvas.height / 2);
+					canvasCtx.stroke();
+				}
+			}
+
+			// if (!isError) {
+			// 	window.onresize = function () {
+			// 		canvas.width = mainSection.offsetWidth;
+			// 	};
+
+			// 	window.onresize();
+			// }
 		},
-		// saveFile(blob) {
-		//     console.log("start");
-		// 	var a = document.createElement("a");
-		// 	document.body.appendChild(a);
-		// 	a.style = "display: none";
-		//     const url = window.URL.createObjectURL(blob);
-		// 	a.href = url;
-		// 	a.click();
-		// 	window.URL.revokeObjectURL(url);
-		//     console.log("end");
-		// },
-		// visualize(stream) {
-		// 	let audioCtx;
-		// 	const canvas = document.querySelector(".visualizer");
-		// 	const canvasCtx = canvas.getContext("2d");
-
-		// 	if (!audioCtx) {
-		// 		audioCtx = new AudioContext();
-		// 	}
-
-		// 	const source = audioCtx.createMediaStreamSource(stream);
-
-		// 	const analyser = audioCtx.createAnalyser();
-		// 	analyser.fftSize = 2048;
-		// 	const bufferLength = analyser.frequencyBinCount;
-		// 	const dataArray = new Uint8Array(bufferLength);
-
-		// 	source.connect(analyser);
-		// 	this.draw(canvas, canvasCtx, analyser, dataArray, bufferLength);
-		// },
-		// draw(canvas, canvasCtx, analyser, dataArray, bufferLength) {
-		// 	const WIDTH = canvas.width;
-		// 	const HEIGHT = canvas.height;
-
-		// 	requestAnimationFrame(this.draw);
-
-		// 	analyser.getByteTimeDomainData(dataArray);
-
-		// 	canvasCtx.fillStyle = "rgb(200, 200, 200)";
-		// 	canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-		// 	canvasCtx.lineWidth = 2;
-		// 	canvasCtx.strokeStyle = "rgb(0, 0, 0)";
-
-		// 	canvasCtx.beginPath();
-
-		// 	let sliceWidth = (WIDTH * 1.0) / bufferLength;
-		// 	let x = 0;
-
-		// 	for (let i = 0; i < bufferLength; i++) {
-		// 		let v = dataArray[i] / 128.0;
-		// 		let y = (v * HEIGHT) / 2;
-
-		// 		if (i === 0) {
-		// 			canvasCtx.moveTo(x, y);
-		// 		} else {
-		// 			canvasCtx.lineTo(x, y);
-		// 		}
-
-		// 		x += sliceWidth;
-		// 	}
-
-		// 	canvasCtx.lineTo(canvas.width, canvas.height / 2);
-		// 	canvasCtx.stroke();
-		// },
-        storeWord(){
-            
-        }
+		async loadingRecordingSylls() {
+            console.log("asfd");
+			await axios
+				.get("http://localhost:3000/read?file=kunw")
+				.then((response) => {
+                    console.log(response.data);
+                    // let list = response.data;
+                    // for (let x = 0; x < list.length; x++) {
+                    //     if (list[x].id == id) {
+                    //         item = list[x];
+                    //         pos = x;
+                    //         break;
+                    //     }
+                    // }
+					this.newSylls = response.data; // assigns the data from api call to the users variable
+				});
+		},
+		storeWord() {},
 	},
 });
 </script>
