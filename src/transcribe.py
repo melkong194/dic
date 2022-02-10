@@ -6,7 +6,7 @@ import json
 from pydub import AudioSegment
 from auditok import split, AudioRegion
 import scipy.io.wavfile as wav
-import Levenshtein
+#import Levenshtein
 
 letters = re.compile(r"(rdd|rl|nj|ng|rr|dj|y|rd|rn|kk|k|h|l|m|b|d|n|w|r|a|e|i|o|u)")
 def get_syll(insent):
