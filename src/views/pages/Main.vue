@@ -70,6 +70,7 @@
 							v-for="item in this.sylls"
 							:key="item.id"
 							:id="item.id"
+							
 							@click="playSound('sound' + item.id)"
 						>
 							{{ item.name }}
@@ -553,7 +554,8 @@ export default defineComponent({
 			});
 		},
 		playSound(index) {
-			this.$refs[index].play();
+			
+			this.$refs[index][0].play();
 		},
 		playString() {
 			this.listSounds = [];
