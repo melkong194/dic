@@ -2,7 +2,7 @@ import { createStore } from 'vuex';
 import words from '../mock/words';
 import syllables from '../mock/syllables';
 
-const store = createStore({
+const store = createStore({		
     state: {
         words: words,
         syllables: syllables,

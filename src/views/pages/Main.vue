@@ -387,9 +387,15 @@ export default defineComponent({
 	methods: {
 		...mapActions(["addSyllableIntoWord"]),
 		initial() {
+			
 			let x = this.getWordById(this.id);
 			this.word = x;
+			console.log(x.sylls);
 			this.sylls = x.sylls;
+			const unique = [...new Set(x.sylls.name)];
+	
+			console.log(unique);
+			
 			this.addStopSyll();
 		},
 		addStopSyll() {
