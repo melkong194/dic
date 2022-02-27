@@ -28,11 +28,17 @@ const store = createStore({
         },
         getSyllsByName: state => name => {
             var sylls = [];
+            
             for (let key in state.syllables) {
                 let x = JSON.parse(JSON.stringify(state.syllables[key]))
+		
                 if (x.name.toUpperCase().startsWith(name.trim().toUpperCase())) {
                     sylls.push(x);
+
                 }
+                x = [...new Set(x.values())];
+	
+
             }
             return sylls;
         },
@@ -99,6 +105,7 @@ const store = createStore({
         async addSyllableIntoWord({ commit, state }, data) {
             const newWords = JSON.parse(JSON.stringify([...state.words]));
             let exist = false;
+            //console.log(newWords[data.wordID].sylls);
             for (let key in newWords[data.wordID].sylls) {
                 let x = newWords[data.wordID].sylls[key];
                 if (x.id == data.addSyll.id) {

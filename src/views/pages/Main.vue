@@ -65,16 +65,17 @@
 					<!-- <div class="tab-container" id="dragBox" v-if="this.searchedWordResult"> -->
 					<p>Testing add syll from recording: {{ this.newSylls }}</p>
                     <div class="tab-container" id="dragBox">
+						<!-- v-for="item in this.sylls"-->
 						<div
 							class="dletter"
-							v-for="item in this.sylls"
+							v-for="item in orderedSylls"
 							:key="item.id"
 							:id="item.id"
 							
 							@click="playSound('sound' + item.id)"
 						>
 							{{ item.name }}
-							<audio
+							<audio 
 								:ref="'sound' + item.id"
 								:src="item.sound"
 							></audio>
@@ -97,7 +98,7 @@
 							@click="playSound('audio' + item.id)"
 						>
 							{{ item.name }}
-							<audio
+							<audio 
 								id="sortedPlay"
 								:ref="'audio' + item.id"
 								:src="item.sound"
@@ -185,10 +186,10 @@
 							v-for="item in this.getListSyllables"
 							:key="item.id"
 							:id="item.id"
-							@click="playSound('syll' + item.id)"
+							@click="playSyll('/assets/sylls/'+item.name+'.wav')"
 						>
 							{{ item.name }}
-							<audio
+							<audio preload="none"
 								:ref="'syll' + item.id"
 								:src="item.sound"
 							></audio>
@@ -208,7 +209,7 @@
 							@click="playSound('syll' + item.id)"
 						>
 							{{ item.name }}
-							<audio
+							<audio 
 								:ref="'syll' + item.id"
 								:src="item.sound"
 							></audio>
@@ -283,6 +284,7 @@ import { createGesture } from "@ionic/vue";
 import { IonContent, IonPage, IonIcon } from "@ionic/vue";
 // import { axiosInstance } from "../../config/axios";
 import axios from "axios";
+import _ from 'lodash';
 import {
 	play,
 	repeat,
@@ -383,6 +385,11 @@ export default defineComponent({
 			}
 			return s;
 		},
+		orderedSylls: function () {
+			return _.orderBy(this.sylls, 'name')
+		},
+	
+	
 	},
 	methods: {
 		...mapActions(["addSyllableIntoWord"]),
@@ -390,11 +397,11 @@ export default defineComponent({
 			
 			let x = this.getWordById(this.id);
 			this.word = x;
-			console.log(x.sylls);
-			this.sylls = x.sylls;
-			const unique = [...new Set(x.sylls.name)];
-	
-			console.log(unique);
+			
+			if (this.data)x.sylls.push(this.data.addSyll);
+			const unique = [...new Map(x.sylls.map(item =>
+				[item['name'], item])).values()];
+			this.sylls = unique;
 			
 			this.addStopSyll();
 		},
@@ -561,7 +568,14 @@ export default defineComponent({
 		},
 		playSound(index) {
 			
+			//this.$refs[index][0].load();
+			
 			this.$refs[index][0].play();
+		},
+		playSyll(syll){
+			
+			const sound = new Audio( syll);
+			sound.play();
 		},
 		playString() {
 			this.listSounds = [];
@@ -612,11 +626,12 @@ export default defineComponent({
 			}
 		},
 		handleAddSyll(syll) {
-			let data = {
+			this.data = {
 				wordID: this.word.id,
 				addSyll: syll,
 			};
-			this.addSyllableIntoWord(data);
+			
+			this.addSyllableIntoWord(this.data);
 			this.isSidebar = false;
 			this.initial();
 			// this.sorted = [];
@@ -797,7 +812,7 @@ export default defineComponent({
 			// }
 		},
 		async loadingRecordingSylls() {
-            console.log("asfd");
+            console.log("Loading Recorded Syllables");
 			await axios
 				.get("http://localhost:3000/read?file=kunw")
 				.then((response) => {
