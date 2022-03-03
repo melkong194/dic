@@ -62,7 +62,7 @@
                     <p>WORD: {{ this.word }}</p>
                     <p>Length: {{this.getWordsLength}}, id: {{this.id}}</p> -->
 
-					<!-- <div class="tab-container" id="dragBox" v-if="this.searchedWordResult"> -->
+					<!-- <div class="tab-container" id="Box" v-if="this.searchedWordResult"> -->
 					<p>Testing add syll from recording: {{ this.newSylls }}</p>
                     <div class="tab-container" id="dragBox">
 						<!-- v-for="item in this.sylls"-->
@@ -397,11 +397,19 @@ export default defineComponent({
 			
 			let x = this.getWordById(this.id);
 			this.word = x;
-			
-			if (this.data)x.sylls.push(this.data.addSyll);
+			//why push not unshift?
+		
+			if (this.data){
+				console.log(this.data.addSyll);
+				x.sylls.push(this.data.addSyll);
+			}
 			const unique = [...new Map(x.sylls.map(item =>
 				[item['name'], item])).values()];
 			this.sylls = unique;
+			
+			//this works, but maybe easier way
+			this.$nextTick(() => {this.updateEvent()});
+		
 			
 			this.addStopSyll();
 		},
