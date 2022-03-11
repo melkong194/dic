@@ -1,3 +1,4 @@
+import _ from 'lodash'
 let syllables = [
     { id: 0, name: "nguy", sound: "/assets/sylls/nguy.wav" },
     { id: 1, name: "leh", sound: "/assets/sylls/leh.wav" },
@@ -524,5 +525,7 @@ let syllables = [
     // { id: 46, name: "di", sound: "/assets/sylls/di.wav" },
     // { id: 47, name: "dih", sound: "/assets/sylls/dih.wav" },
 ];
+
+syllables = _.orderBy(syllables, 'name');
 
 export default syllables;
