@@ -14,6 +14,26 @@ const store = createStore({
         getListSyllables: state => {
             return JSON.parse(JSON.stringify(state.syllables));
         },
+        getListSyllablesByOrder: state => {
+            let result = [];
+            let list = JSON.parse(JSON.stringify(state.syllables));
+            let arr = ['a','bb','b','dj','d','e','kk','k','l','m','ng','nj', 'n','o','rd','rl','rn','rr','r','u','w', 'y'];
+            for(let key in arr){
+                result[key]=[]; 
+            }
+            for (let key in list){
+                let value = list[key];
+                
+                for(let k in arr){
+                    if( value.name.toUpperCase().startsWith(arr[k].toUpperCase())){
+                        result[k].push(value);
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        },
         getSyllableById: state => id => {
             if (id == null) id = 1;
             var syll = null;
@@ -76,6 +96,9 @@ const store = createStore({
         SET_LIST_WORDS: (state, data) => {
             state.words = data;
         },
+        SET_LIST_SYLLABLES: (state, data) => {
+            state.syllables = data;
+        },
         // SET_LIST_SYLLS: (state, data) => {
         //     state.sylls = data
         // },
@@ -111,7 +134,42 @@ const store = createStore({
 
             await commit('SET_LIST_WORDS', newWords);
         },
+
+        async addSyllableIntoWordByName({ commit, state }, data) {
+            let newWords = JSON.parse(JSON.stringify([...state.words]));
+            let newSyllables = JSON.parse(JSON.stringify(state.syllables));
+
+            for (let key in newSyllables) {
+                // console.log("===========")
+                let s = newSyllables[key];
+                for (let k in data.syllNames) {
+                    let e = data.syllNames[k];
+                    if (s.name.toUpperCase() == e.toUpperCase()) {
+                        
+                        //checking if syllables exist in current word
+                        let exist = false;
+                        for (let i in newWords[data.wordID].sylls) {
+                            let x = newWords[data.wordID].sylls[i];
+                            if (s.name == x.name) {
+                                exist = true;
+                            }
+                        }
+                        
+                        if(!exist){
+                            newWords[data.wordID].sylls.push(s);
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            await commit('SET_LIST_WORDS', newWords);
+
+        }
+
     }
+
 });
 
 export default store;

@@ -63,8 +63,8 @@
                     <p>Length: {{this.getWordsLength}}, id: {{this.id}}</p> -->
 
 					<!-- <div class="tab-container" id="dragBox" v-if="this.searchedWordResult"> -->
-					<p>Testing add syll from recording: {{ this.newSylls }}</p>
-                    <div class="tab-container" id="dragBox">
+					<!-- <p>Testing add syll from recording: {{ this.newSylls }}</p> -->
+					<div class="tab-container" id="dragBox">
 						<div
 							class="dletter"
 							v-for="item in this.sylls"
@@ -145,8 +145,12 @@
 			>
 			<!-- *********************************** -->
 
-			<!-- ///////// SIDE BAR ////////////////////// -->
-			<div v-if="this.isSidebar" class="panelWrapper">
+			<!-- ///////// ADD SIDE BAR ////////////////////// -->
+			<div
+				v-if="this.isSidebar"
+				class="panelWrapper"
+				@click="this.closePanel($event)"
+			>
 				<div class="sidebar">
 					<div class="headerSidebar">
 						<!-- <ion-icon class="controlSideBar" :icon="add"></ion-icon> -->
@@ -179,7 +183,37 @@
 						<ion-icon @click="searchReset" :icon="close"></ion-icon>
 					</span>
 
-					<ul class="list-group" v-if="this.syllValue == ''">
+					<ul v-if="this.syllValue == ''">
+						<li
+							v-for="(list, ind) in this.getListSyllablesByOrder"
+							:key="ind"
+						>
+							<span class="listHeader"
+								>{{ this.alpList[ind] }}
+								<ion-icon :icon="listSharp"></ion-icon>
+							</span>
+							<ul class="list-group">
+								<li
+									v-for="item in list"
+									:key="item.id"
+									:id="item.id"
+									@click="playSound('syll' + item.id)"
+								>
+									{{ item.name }}
+									<audio
+										:ref="'syll' + item.id"
+										:src="item.sound"
+									></audio>
+									<ion-icon
+										:icon="add"
+										@click="handleAddSyll(item)"
+									></ion-icon>
+								</li>
+							</ul>
+						</li>
+					</ul>
+
+					<!-- <ul class="list-group" v-if="this.syllValue == ''">                        
 						<li
 							v-for="item in this.getListSyllables"
 							:key="item.id"
@@ -196,7 +230,7 @@
 								@click="handleAddSyll(item)"
 							></ion-icon>
 						</li>
-					</ul>
+					</ul> -->
 
 					<ul class="list-group" v-if="this.syllValue != ''">
 						<!-- <span>{{this.syllValue}}</span> -->
@@ -220,7 +254,11 @@
 				</div>
 			</div>
 			<!-- ///////// RECORDER ////////////////////// -->
-			<div v-if="this.isRecorder" class="panelWrapper">
+			<div
+				v-if="this.isRecorder"
+				class="panelWrapper"
+				@click="this.closePanel($event)"
+			>
 				<div class="recordPanel">
 					<div class="headerRecordPanel" id="buttons">
 						<span v-if="this.isRecording == 1"
@@ -295,6 +333,7 @@ import {
 	addSharp,
 	micOff,
 	closeCircleSharp,
+	listSharp,
 } from "ionicons/icons";
 import { defineComponent } from "vue";
 import { mapGetters, mapActions } from "vuex";
@@ -317,13 +356,36 @@ export default defineComponent({
 			syllValue: "",
 			isSearch: false,
 			isSyllSearch: false,
-			isSidebar: false,
+			isSidebar: true,
 			isRecorder: false,
 			isTextOutput: true,
 			listSounds: [],
 			isRecording: 1,
-            newSylls: null,
-
+			newSylls: null,
+			alpList: [
+				"a",
+				"bb",
+				"b",
+				"dj",
+				"d",
+				"e",
+				"kk",
+				"k",
+				"l",
+				"m",
+				"ng",
+				"nj",
+				"n",
+				"o",
+				"rd",
+				"rl",
+				"rn",
+				"rr",
+				"r",
+				"u",
+				"w",
+				"y",
+			],
 		};
 	},
 	watch: {
@@ -354,6 +416,7 @@ export default defineComponent({
 			add,
 			micOff,
 			closeCircleSharp,
+			listSharp,
 		};
 	},
 	computed: {
@@ -364,6 +427,7 @@ export default defineComponent({
 			"getSyllableById",
 			"getListSyllables",
 			"getSyllsByName",
+			"getListSyllablesByOrder",
 		]),
 		searchedWordResult() {
 			let w;
@@ -384,12 +448,14 @@ export default defineComponent({
 		},
 	},
 	methods: {
-		...mapActions(["addSyllableIntoWord"]),
+		...mapActions(["addSyllableIntoWord", "addSyllableIntoWordByName"]),
 		initial() {
 			let x = this.getWordById(this.id);
 			this.word = x;
 			this.sylls = x.sylls;
 			this.addStopSyll();
+			// let k = this.getListSyllablesByOrder;
+			// console.log(k);
 		},
 		addStopSyll() {
 			let stop = { id: -1, name: "___", sound: "/assets/stop.wav" };
@@ -581,6 +647,17 @@ export default defineComponent({
 		},
 		toggleSidebar() {
 			this.isSidebar = !this.isSidebar;
+
+			// if(this.isSidebar){
+			//     console.log(this.isSidebar);
+			//     console.log(e.target.parent);
+			// }
+		},
+		closePanel(e) {
+			if (e.target.className == "panelWrapper") {
+				this.isSidebar = false;
+				this.isRecorder = false;
+			}
 		},
 		toggleSyllSearch() {
 			this.searchReset();
@@ -610,8 +687,10 @@ export default defineComponent({
 			};
 			this.addSyllableIntoWord(data);
 			this.isSidebar = false;
-			this.initial();
+
 			// this.sorted = [];
+			//update word list with new sylls into database
+			this.initial();
 		},
 		handleRecord() {
 			// const record = document.querySelector('.startRecord');
@@ -642,10 +721,9 @@ export default defineComponent({
 								"data available after MediaRecorder.stop() called."
 							);
 
-							// const clipName = 'abc';
 							const clipContainer =
 								document.createElement("article");
-							// const clipLabel = document.createElement("p");
+
 							const audio = document.createElement("audio");
 							const recordButton =
 								document.createElement("button");
@@ -656,7 +734,6 @@ export default defineComponent({
 
 							clipContainer.classList.add("clip");
 							audio.setAttribute("controls", "");
-							// clipLabel.textContent = clipName;
 
 							clipContainer.appendChild(audio);
 							clipContainer.appendChild(recordButton);
@@ -681,18 +758,17 @@ export default defineComponent({
 								);
 							else {
 								// Others
-								var aTag = document.createElement("a"),
-									url = URL.createObjectURL(blob);
-								aTag.href = url;
-								aTag.download = filename;
-								document.body.appendChild(aTag);
-								console.log(aTag);
-
-								aTag.addEventListener("click", (event) => {
-									event.preventDefault();
-									console.log(aTag);
-									console.log(event);
-								});
+								// var aTag = document.createElement("a"),
+								// 	url = URL.createObjectURL(blob);
+								// aTag.href = url;
+								// aTag.download = filename;
+								// document.body.appendChild(aTag);
+								// console.log(aTag);
+								// aTag.addEventListener("click", (event) => {
+								// 	event.preventDefault();
+								// 	console.log(aTag);
+								// 	console.log(event);
+								// });
 							}
 
 							chunks = [];
@@ -704,8 +780,29 @@ export default defineComponent({
 								return;
 							};
 							acceptButton.onclick = function () {
+								// let URL = "....";
+
+								// let data = new FormData();
+								// data.append("name", "image");
+								// data.append("file", event.target.files[0]);
+
+								// let config = {
+								// 	header: {
+								// 		"Content-Type": "multipart/form-data",
+								// 	},
+								// };
+
+								// axios
+								// 	.post(URL, data, config)
+								// 	.then((response) => {
+								// 		console.log("response", response);
+								// 	})
+								// 	.catch((error) => {
+								// 		console.log("error", error);
+								// 	});
+
 								// Code Python here
-                                self.loadingRecordingSylls();
+								self.loadingRecordingSylls();
 								self.toggleRecordPanel();
 								return;
 							};
@@ -789,21 +886,30 @@ export default defineComponent({
 			// }
 		},
 		async loadingRecordingSylls() {
-            console.log("asfd");
+			const self = this;
 			await axios
 				.get("http://localhost:3000/read?file=kunw")
 				.then((response) => {
-                    console.log(response.data);
-                    // let list = response.data;
-                    // for (let x = 0; x < list.length; x++) {
-                    //     if (list[x].id == id) {
-                    //         item = list[x];
-                    //         pos = x;
-                    //         break;
-                    //     }
-                    // }
+					let list = JSON.stringify(response.data);
+					list = JSON.parse(list);
+					list = list.replace(/[' ]/g, "");
+					list = list.substring(1, list.length - 3).split(",");
+
+					self.handleAddingNewSylls(list);
+					self.initial();
+
 					this.newSylls = response.data; // assigns the data from api call to the users variable
 				});
+		},
+		handleAddingNewSylls(syllNames) {
+			let data = {
+				wordID: this.word.id,
+				syllNames: syllNames,
+			};
+			this.addSyllableIntoWordByName(data);
+
+			// this.sorted = [];
+			//update word list with new sylls into database
 		},
 		storeWord() {},
 	},

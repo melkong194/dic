@@ -376,15 +376,23 @@ input:focus{
     overflow-y: auto;
     color: #000;
 }
-
+.listHeader{
+    font-size: 35px;
+    display: flex;
+    font-weight: 700;
+    color: #2515d1;
+    justify-content: space-between;
+    margin-top: 35px;
+    margin-bottom: 5px;
+}
 .list-group li {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgb(186, 183, 197);
-    margin-top: 35px;
     padding-bottom: 8px;
     font-size: 30px;
+    margin-left: 15px;
 }
 .list-group li ion-icon {
     border-radius: 50%;
