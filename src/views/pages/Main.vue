@@ -719,6 +719,7 @@ export default defineComponent({
 			// this.sorted = [];
 			//update word list with new sylls into database
 			this.initial();
+            this.updateEvent(true);
 		},
 		handleRecord() {
 			// const record = document.querySelector('.startRecord');
