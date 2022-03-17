@@ -399,6 +399,7 @@ export default defineComponent({
 		},
 	},
 	created() {
+        this.getStorageWords();
 		this.initial();
 	},
 	mounted() {
@@ -455,7 +456,7 @@ export default defineComponent({
 	
 	},
 	methods: {
-		...mapActions(["addSyllableIntoWord", "addSyllableIntoWordByName"]),
+		...mapActions(["addSyllableIntoWord", "addSyllableIntoWordByName", "getStorageWords"]),
 		initial() {
 			
 			let x = this.getWordById(this.id);
@@ -639,14 +640,11 @@ export default defineComponent({
 				// this.updateSortedListOutput();
 			});
 		},
-		playSound(index) {
-			
+		playSound(index) {		
 			//this.$refs[index][0].load();
-			
 			this.$refs[index][0].play();
 		},
 		playSyll(syll){
-			
 			const sound = new Audio( syll);
 			sound.play();
 		},

@@ -2,9 +2,9 @@ import { createStore } from 'vuex';
 import words from '../mock/words';
 import syllables from '../mock/syllables';
 
-const store = createStore({		
+const store = createStore({
     state: {
-        words: words,
+        words: null,
         syllables: syllables,
         searched: null,
         sylls: [],
@@ -17,15 +17,15 @@ const store = createStore({
         getListSyllablesByOrder: state => {
             let result = [];
             let list = JSON.parse(JSON.stringify(state.syllables));
-            let arr = ['a','bb','b','dj','d','e','kk','k','l','m','ng','nj', 'n','o','rd','rl','rn','rr','r','u','w', 'y'];
-            for(let key in arr){
-                result[key]=[]; 
+            let arr = ['a', 'bb', 'b', 'dj', 'd', 'e', 'kk', 'k', 'l', 'm', 'ng', 'nj', 'n', 'o', 'rd', 'rl', 'rn', 'rr', 'r', 'u', 'w', 'y'];
+            for (let key in arr) {
+                result[key] = [];
             }
-            for (let key in list){
+            for (let key in list) {
                 let value = list[key];
-                
-                for(let k in arr){
-                    if( value.name.toUpperCase().startsWith(arr[k].toUpperCase())){
+
+                for (let k in arr) {
+                    if (value.name.toUpperCase().startsWith(arr[k].toUpperCase())) {
                         result[k].push(value);
                         break;
                     }
@@ -48,16 +48,16 @@ const store = createStore({
         },
         getSyllsByName: state => name => {
             var sylls = [];
-            
+
             for (let key in state.syllables) {
                 let x = JSON.parse(JSON.stringify(state.syllables[key]))
-		
+
                 if (x.name.toUpperCase().startsWith(name.trim().toUpperCase())) {
                     sylls.push(x);
 
                 }
                 x = [...new Set(x.values())];
-	
+
 
             }
             return sylls;
@@ -101,6 +101,8 @@ const store = createStore({
     mutations: {
         SET_LIST_WORDS: (state, data) => {
             state.words = data;
+            var str = JSON.stringify(state.words);
+			localStorage.setItem('wordList', str);
         },
         SET_LIST_SYLLABLES: (state, data) => {
             state.syllables = data;
@@ -123,6 +125,21 @@ const store = createStore({
         // onWordsListener ({ commit }) { 
         //     let data = words;
         //     commit('SET_LIST_WORDS', data);   
+        // },
+        async getStorageWords({ commit}) {
+            // console.log(words);
+            let wordList = localStorage.getItem('wordList');
+            if (wordList !== null) {
+                await commit('SET_LIST_WORDS', JSON.parse(wordList));
+            } else {
+                let list = words;
+                await commit('SET_LIST_WORDS', list);
+            }
+        },
+        // async setStorageWords({ state }) {
+        //     console.log(words);
+        //     var str = JSON.stringify(state.words);
+		// 		localStorage.setItem('wordList', str);
         // },
 
         async addSyllableIntoWord({ commit, state }, data) {
@@ -152,7 +169,7 @@ const store = createStore({
                 for (let k in data.syllNames) {
                     let e = data.syllNames[k];
                     if (s.name.toUpperCase() == e.toUpperCase()) {
-                        
+
                         //checking if syllables exist in current word
                         let exist = false;
                         for (let i in newWords[data.wordID].sylls) {
@@ -161,8 +178,8 @@ const store = createStore({
                                 exist = true;
                             }
                         }
-                        
-                        if(!exist){
+
+                        if (!exist) {
                             newWords[data.wordID].sylls.push(s);
                         }
 
