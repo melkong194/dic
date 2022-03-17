@@ -91,12 +91,6 @@ const store = createStore({
             let x = JSON.parse(JSON.stringify(state.words));
             return x.length;
         },
-        // getSylls:state => {
-        //     return JSON.parse(JSON.stringify(state.sylls));
-        // },
-        // getSortedSylls:state => {
-        //     return JSON.parse(JSON.stringify(state.sortedSylls));
-        // },
     },
     mutations: {
         SET_LIST_WORDS: (state, data) => {
