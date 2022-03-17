@@ -642,7 +642,7 @@ export default defineComponent({
 		},
 		playSound(index) {		
 			//this.$refs[index][0].load();
-			this.$refs[index][0].play();
+			this.$refs[index].play();
 		},
 		playSyll(syll){
 			const sound = new Audio( syll);
